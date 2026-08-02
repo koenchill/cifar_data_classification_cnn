@@ -23,14 +23,9 @@ These are mandatory for production application release (Release C+), not backlog
 | Verification (E-16) | Consolidated suites green; requirements-to-test matrix; defect register; QA sign-off (`docs/evidence/release-e/`) |
 | Production (E-17) | ORR signed; rollback proven; residual risks accepted by named authority |
 
-## SLO candidates (to approve in Phase 17)
+## SLOs
 
-| SLI | Candidate SLO |
-|---|---|
-| Availability (`/ready`) | ≥ 99.5% monthly (staging may be lower) |
-| Predict latency (p95, warm, allowed image size) | ≤ 500 ms on measured envelope (revise from Phase 12 benches) |
-| Error rate (5xx) | ≤ 1% under target load |
-| Auth failure alert | Page on sustained spike |
+Approved in Phase 17 — see `docs/governance/slo_policy.md` (availability ≥ 99.5%, p95 ≤ 500 ms, 5xx ≤ 1%, auth-spike alert).
 
 ## Severity taxonomy
 

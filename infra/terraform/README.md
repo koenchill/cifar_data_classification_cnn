@@ -40,6 +40,12 @@ terraform -chdir=infra/terraform/envs/staging init -backend=false
 terraform -chdir=infra/terraform/envs/staging validate
 ```
 
+## Continuity (Release E)
+
+- State bucket is versioned + KMS-encrypted with access logs (bootstrap module).
+- Restore targets and procedures: `docs/runbooks/continuity-restore.md`.
+- Live account apply remains an ORR bootstrap step before production traffic.
+
 ## Forbidden
 
 - Wildcard IAM admin without exception

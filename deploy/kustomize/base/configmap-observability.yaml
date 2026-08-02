@@ -12,6 +12,6 @@ data:
   OTEL_LOGS_EXPORTER: otlp
   LOG_LEVEL: INFO
   # SLO targets (documented; alert rules mirror these)
-  SLO_AVAILABILITY: "99.9"
-  SLO_P95_LATENCY_MS: "100"
+  SLO_AVAILABILITY: "99.5"
+  SLO_P95_LATENCY_MS: "500"
   SLO_ERROR_RATE: "0.01"

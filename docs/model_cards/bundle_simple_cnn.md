@@ -6,7 +6,7 @@
 | Champion | `simple_cnn_baseline` |
 | Formats | `model.pt` (state_dict), `model.onnx` (opset 17) |
 | Integrity | SHA-256 file hashes + HMAC-SHA256 `manifest.sig` |
-| Status | Release B candidate — **non-production** |
+| Status | Release E ORR-ready bundle identity — **serve only via signed digest + Argo**; not a live-traffic claim until bootstrap checklist |
 
 ## Contents
 

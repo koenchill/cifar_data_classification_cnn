@@ -4,8 +4,8 @@
 
 | Signal | Source | SLO / threshold |
 |---|---|---|
-| Availability | Prometheus `http_requests_total` | ≥ 99.9% |
-| Latency p95 | histogram quantile | ≤ 100 ms (Phase 12 target) |
+| Availability | Prometheus `http_requests_total` | ≥ 99.5% (approved Phase 17) |
+| Latency p95 | histogram quantile | ≤ 500 ms (approved Phase 17) |
 | Auth denials | 401/403 rate | Spike alert (security) |
 | Replica floor | kube-state-metrics | ≥ 2 available |
 
