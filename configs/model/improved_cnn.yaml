@@ -1,0 +1,20 @@
+# Release B ImprovedCNN — additive; does not replace guide SimpleCNN baseline.
+name: ImprovedCNN
+input_shape: [3, 32, 32]
+num_classes: 10
+baseline_topology: SimpleCNN
+batch_norm: true
+dropout: true
+dropout_p: 0.3
+output: logits
+trusted_artifact_format: state_dict_pth
+layers:
+  conv1: { in_channels: 3, out_channels: 32, kernel_size: 3, padding: 1 }
+  bn1: BatchNorm2d(32)
+  conv2: { in_channels: 32, out_channels: 64, kernel_size: 3, padding: 1 }
+  bn2: BatchNorm2d(64)
+  conv3: { in_channels: 64, out_channels: 64, kernel_size: 3, padding: 1 }
+  bn3: BatchNorm2d(64)
+  pool: { kernel_size: 2, stride: 2 }
+  fc1: { in_features: 1024, out_features: 64 }
+  fc2: { in_features: 64, out_features: 10 }

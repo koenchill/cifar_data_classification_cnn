@@ -9,7 +9,7 @@
 | 04 Baseline training | `done` | Gate: docs/evidence/release-a/phase-04-gate.md |
 | 05 Baseline evaluation (Release A) | `done` | Gate: docs/evidence/release-a/phase-05-gate.md; Release A closed |
 | 06 Training controls | `done` | Gate: docs/evidence/release-b/phase-06-gate.md |
-| 07 Improved CNN | `todo` | |
+| 07 Improved CNN | `done` | Gate: docs/evidence/release-b/phase-07-gate.md |
 | 08 Rigorous evaluation | `todo` | |
 | 09 Transfer / champion | `todo` | |
 | 10 Model bundle (Release B) | `todo` | |

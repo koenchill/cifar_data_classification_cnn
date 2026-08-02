@@ -1,0 +1,29 @@
+# Ablation protocol for Phase 07 (same seeds/hyperparams across arms).
+seed: 42
+optimizer: Adam
+lr: 0.001
+loss: CrossEntropyLoss
+epochs_smoke: 2
+max_batches_smoke: 4
+eval_augmented: false
+variants:
+  - name: baseline
+    model: SimpleCNN
+    train_augment: false
+    batch_norm: false
+    dropout: false
+  - name: aug_only
+    model: SimpleCNN
+    train_augment: true
+    batch_norm: false
+    dropout: false
+  - name: reg_only
+    model: ImprovedCNN
+    train_augment: false
+    batch_norm: true
+    dropout: true
+  - name: combined
+    model: ImprovedCNN
+    train_augment: true
+    batch_norm: true
+    dropout: true

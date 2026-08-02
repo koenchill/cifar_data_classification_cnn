@@ -4,7 +4,7 @@
 |---|---|
 | Release | B |
 | Depends | Phase 6 |
-| Status | `todo` |
+| Status | `done` |
 | Evidence | `docs/evidence/release-b/phase-07-gate.md` |
 
 ## Objective
@@ -29,15 +29,15 @@ Evaluate controlled improvements without changing the guide baseline.
 
 ### Model development
 
-  - [ ] Training-only crop/flip/optional color jitter; configurable BN and dropout
+  - [x] Training-only crop/flip/optional color jitter; configurable BN and dropout
 
 ### Experimental quality
 
-  - [ ] Baseline vs aug-only vs reg-only vs combined ablations under same protocol/seeds
+  - [x] Baseline vs aug-only vs reg-only vs combined ablations under same protocol/seeds
 
 ### AI risk
 
-  - [ ] Document benefit, failure modes, config changes, evidence, residual overfitting risk
+  - [x] Document benefit, failure modes, config changes, evidence, residual overfitting risk
 
 ## Deliverables
 
@@ -46,8 +46,8 @@ Evaluate controlled improvements without changing the guide baseline.
 
 ## Exit gate
 
-- [ ] No evaluation transform is augmented; comparisons reproduce
-- [ ] Material regressions/uncertainty documented, not hidden
+- [x] No evaluation transform is augmented; comparisons reproduce
+- [x] Material regressions/uncertainty documented, not hidden
 
 ## Verify
 
@@ -67,8 +67,8 @@ Do not start the next phase.
 
 ## Done when
 
-- [ ] All workstream tasks complete
-- [ ] Deliverables exist at listed paths
-- [ ] Exit gate criteria satisfied
-- [ ] Verify commands recorded/pass
-- [ ] No global stop condition triggered
+- [x] All workstream tasks complete
+- [x] Deliverables exist at listed paths
+- [x] Exit gate criteria satisfied
+- [x] Verify commands recorded/pass
+- [x] No global stop condition triggered
