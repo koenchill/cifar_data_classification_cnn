@@ -1,15 +1,16 @@
 {
   "total": 10000,
-  "correct": 1000,
-  "accuracy_pct": 10.0,
-  "avg_loss": 2.30598779151234,
-  "message": "Accuracy of the network on 10000 test images: 10.00%",
-  "guide_line": "Accuracy of the network on 10000 test images: 10.00%",
+  "correct": 7341,
+  "accuracy_pct": 73.41,
+  "avg_loss": 0.8222172915840301,
+  "message": "Accuracy of the network on 10000 test images: 73.41%",
+  "guide_line": "Accuracy of the network on 10000 test images: 73.41%",
   "official_test_locked": true,
   "non_production": true,
   "data": {
-    "dataset": "FakeCIFAR10",
-    "test_size": 10000
+    "dataset": "CIFAR10",
+    "test_size": 10000,
+    "official_test_locked": true
   },
   "model": "SimpleCNN",
   "device": "cpu"

@@ -45,5 +45,9 @@ python scripts/evaluate.py --smoke --skip-save
 ## Notes
 
 - Smoke metrics use FakeCIFAR10 (constant images) so accuracy is not a CIFAR-10 claim.
-- Live CIFAR-10 10-epoch train + eval remains offline: train then `python scripts/evaluate.py --checkpoint …`.
+- Live CIFAR-10 run recorded 2026-08-02 (CPU, seed 42, guide baseline):
+  - `python scripts/train.py --config configs/train/baseline.yaml` → `artifacts/baseline/` (~368 s)
+  - `python scripts/evaluate.py --checkpoint artifacts/baseline/checkpoint_last.pth`
+  - Official test accuracy **73.41%** (7341/10000); avg loss 0.8222 — see `baseline_metrics.json` / gallery.
 - Root `cnn_model.pth` is gitignored; equivalence proven in integration tests.
+- Educational non-production result only; not a production performance claim.
