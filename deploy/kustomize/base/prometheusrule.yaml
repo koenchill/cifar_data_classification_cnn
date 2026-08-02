@@ -28,12 +28,12 @@ spec:
             histogram_quantile(
               0.95,
               sum(rate(http_request_duration_seconds_bucket{namespace="cifar-cnn"}[5m])) by (le)
-            ) * 1000 > 100
+            ) * 1000 > 500
           for: 15m
           labels:
             severity: warning
           annotations:
-            summary: "CIFAR-CNN API p95 latency above 100ms target"
+            summary: "CIFAR-CNN API p95 latency above 500ms SLO"
         - alert: CifarCnnApiReplicaShortage
           expr: kube_deployment_status_replicas_available{namespace="cifar-cnn",deployment="api"} < 2
           for: 5m

@@ -51,4 +51,4 @@
 | A | Map (data/model) + baseline Measure |
 | B | Expanded Measure + Manage gate for champion/bundle |
 | C–D | Security/ops controls enabling Manage in deployment |
-| E | Full Manage / ORR / acceptance |
+| E | Full Manage / ORR / acceptance — confirmed `docs/evidence/release-e/ai_rmf_manage_confirmation.md` (2026-08-02) |

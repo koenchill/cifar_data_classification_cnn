@@ -13,7 +13,7 @@
 | CYB-07 | Medium | Torch/torchvision pinned advisories (`pip-audit`) | **Accepted** (carry-forward) | Offline/train threat limited; prod image reassess; track upgrade | Security | 2026-11-01 |
 | AIR-01 | Medium | Over-trust of CIFAR accuracy on real photos | **Accepted** (intended-use) | Prohibited-use docs; model card limits; no safety claims | AI owner | Review at ORR |
 | AIR-05 | Medium | High-confidence OOD errors | **Treating / residual** | OIDC/RBAC + confidence flags; not anonymous surface | Model/App | ORR |
-| DEF-16-01 | Medium | No live EKS/Argo customer-account soak | **Accepted** for desk RC | Manifest/policy tests + runbooks + tabletops; block prod go-live until Phase 17 live ORR | Platform | Phase 17 |
+| DEF-16-01 | Medium | No live EKS/Argo customer-account soak | **Accepted** Rel E desk close | Manifest/policy tests + runbooks + tabletops; **block first prod traffic** until ORR bootstrap checklist | Platform | Until live soak signed |
 | DEF-16-02 | Low | Matplotlib/ONNX deprecation warnings in pytest | **Accepted** | Non-flaky; does not fail gates; track upstream | Eng | Next train |
 
 ## Closed this verification

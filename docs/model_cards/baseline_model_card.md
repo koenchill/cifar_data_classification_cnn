@@ -5,7 +5,7 @@
 | Model | SimpleCNN (student guide Steps 2–7) |
 | Dataset | CIFAR-10 (official 10k test locked) |
 | Owner | `koenchill` |
-| Status | Educational baseline — **non-production** |
+| Status | Educational baseline — guide contract locked; production serving uses governed bundle + API controls (Release E ORR) |
 | Training | `CrossEntropyLoss`, `Adam(lr=0.001)`, 10 epochs, batch 32 |
 
 ## Intended use

@@ -19,6 +19,6 @@
 | 14 K8s runtime | `done` | Gate: docs/evidence/release-d/phase-14-gate.md |
 | 15 Argo CD (Release D) | `done` | Gate: docs/evidence/release-d/phase-15-gate.md; Release D closed |
 | 16 Verification / QA | `done` | Gate: docs/evidence/release-e/phase-16-gate.md |
-| 17 Ops release (Release E) | `todo` | |
+| 17 Ops release (Release E) | `done` | Gate: docs/evidence/release-e/phase-17-gate.md; Release E closed |
 
 Update status to `in_progress`, `blocked`, or `done` as phases complete.

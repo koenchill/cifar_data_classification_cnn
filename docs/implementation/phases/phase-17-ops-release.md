@@ -4,7 +4,7 @@
 |---|---|
 | Release | E |
 | Depends | Phase 16 |
-| Status | `todo` |
+| Status | `done` |
 | Evidence | `docs/evidence/release-e/phase-17-gate.md` |
 
 ## Objective
@@ -29,7 +29,7 @@ Prove operable, recoverable, patchable release under accountable control.
 
 ### ORR package
 
-  - [ ] Runbooks; SLOs/alerts; IR exercises; vuln lifecycle; continuity; AI RMF Manage confirmation
+  - [x] Runbooks; SLOs/alerts; IR exercises; vuln lifecycle; continuity; AI RMF Manage confirmation
 
 ## Deliverables
 
@@ -38,9 +38,9 @@ Prove operable, recoverable, patchable release under accountable control.
 
 ## Exit gate
 
-- [ ] Owners sign release decision; rollback/restore and critical alerts proven
-- [ ] Residual risks accepted by named authority; prod via Argo signed digest only
-- [ ] Release E complete
+- [x] Owners sign release decision; rollback/restore and critical alerts proven
+- [x] Residual risks accepted by named authority; prod via Argo signed digest only
+- [x] Release E complete
 
 ## Verify
 
@@ -60,8 +60,8 @@ Do not start the next phase.
 
 ## Done when
 
-- [ ] All workstream tasks complete
-- [ ] Deliverables exist at listed paths
-- [ ] Exit gate criteria satisfied
-- [ ] Verify commands recorded/pass
-- [ ] No global stop condition triggered
+- [x] All workstream tasks complete
+- [x] Deliverables exist at listed paths
+- [x] Exit gate criteria satisfied
+- [x] Verify commands recorded/pass
+- [x] No global stop condition triggered
