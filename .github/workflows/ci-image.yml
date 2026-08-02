@@ -85,29 +85,52 @@ jobs:
             type=sha,prefix=sha-
             type=ref,event=branch
 
-      - name: Build image
-        id: build
+      # Never push an unscoped tag like cifar-cnn-api:ci — Docker Hub treats that as
+      # library/cifar-cnn-api and 401s. Local tag is PR/--load only; publish uses GHCR tags.
+      - name: Build image (PR load)
+        id: build_pr
+        if: github.event_name == 'pull_request'
         uses: docker/build-push-action@471d1dc4e07e5cdedd4c2171150001c434f0b7a4 # v6.15.0
         with:
           context: .
           file: deploy/docker/Dockerfile
-          push: ${{ github.event_name != 'pull_request' }}
-          load: ${{ github.event_name == 'pull_request' }}
-          tags: |
-            ${{ env.LOCAL_TAG }}
-            ${{ steps.meta.outputs.tags }}
+          push: false
+          load: true
+          tags: ${{ env.LOCAL_TAG }}
           labels: ${{ steps.meta.outputs.labels }}
-          # provenance/SBOM attestations produce manifest lists incompatible with --load.
-          provenance: ${{ github.event_name != 'pull_request' }}
-          sbom: ${{ github.event_name != 'pull_request' }}
+          provenance: false
+          sbom: false
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Build and push image (GHCR)
+        id: build
+        if: github.event_name != 'pull_request'
+        uses: docker/build-push-action@471d1dc4e07e5cdedd4c2171150001c434f0b7a4 # v6.15.0
+        with:
+          context: .
+          file: deploy/docker/Dockerfile
+          push: true
+          load: false
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          provenance: true
+          sbom: true
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
       - name: Trivy image scan (CRITICAL gate)
         # Prefer dockerized Trivy over trivy-action composite deps (setup-trivy pin drift).
         env:
-          SCAN_REF: ${{ github.event_name == 'pull_request' && env.LOCAL_TAG || format('{0}:sha-{1}', env.IMAGE_NAME, github.sha) }}
+          DIGEST: ${{ steps.build.outputs.digest }}
         run: |
+          set -euo pipefail
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            SCAN_REF="${LOCAL_TAG}"
+          else
+            SCAN_REF="${IMAGE_NAME}@${DIGEST}"
+            docker pull "$SCAN_REF"
+          fi
           docker run --rm \
             -v /var/run/docker.sock:/var/run/docker.sock \
             -v "$PWD/deploy/docker/trivyignore:/.trivyignore:ro" \
