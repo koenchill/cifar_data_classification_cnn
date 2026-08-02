@@ -3,7 +3,7 @@
   "version": "1.0.1",
   "model_name": "SimpleCNN",
   "champion_id": "simple_cnn_baseline",
-  "created_utc": "2026-08-02T01:40:24.903351+00:00",
+  "created_utc": "2026-08-02T01:42:56.670953+00:00",
   "class_order": [
     "airplane",
     "automobile",
@@ -44,8 +44,8 @@
     "output_name": "logits",
     "dynamic_batch": true,
     "parity": {
-      "max_abs_diff": 5.960464477539063e-08,
-      "mean_abs_diff": 1.8030405044555664e-08,
+      "max_abs_diff": 8.940696716308594e-08,
+      "mean_abs_diff": 3.6805868148803714e-08,
       "passed": true,
       "tolerance": 0.0001,
       "batch_sizes": [

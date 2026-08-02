@@ -4,7 +4,7 @@
     "files": [
       {
         "path": "bom.json",
-        "sha256": "f4847299cdacfc032e067690e6f1e9e45b1278a0e7689c0b8962fdbb8bfd7ce9",
+        "sha256": "01cb258307dbce127fbfd80b6fc87c2118be4067c946e80fe5ca45750aa8b831",
         "bytes": 674
       },
       {
@@ -14,17 +14,17 @@
       },
       {
         "path": "metadata.json",
-        "sha256": "df849baed07fb9e89e1a9da0608c499dbd7420b53ffb447e959eb6d062172103",
+        "sha256": "b1bae026140c3d4f6d04334beb1d6378dbea63d70ed4cadb04bf254af1f9d7d2",
         "bytes": 1608
       },
       {
         "path": "model.onnx",
-        "sha256": "6b03184a1c54f99460e83f676f811d2afa10b4d70bf30b267155950149069e11",
+        "sha256": "68a092d51a4c9e848bb9c6b9c109dbcfe1d5c23757b4eef4d5d9c227a696fd22",
         "bytes": 492340
       },
       {
         "path": "model.pt",
-        "sha256": "de342191d78fbff42e465a3c82f0d7c997fe5d3aef7d6735d0beabebb1837d55",
+        "sha256": "138aaa3128977f30018d6cee60d64e4e6055f8302bc0a7ec1e9bcb9dca845071",
         "bytes": 493733
       }
     ],

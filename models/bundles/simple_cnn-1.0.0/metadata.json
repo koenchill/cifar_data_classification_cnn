@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "model_name": "SimpleCNN",
   "champion_id": "simple_cnn_baseline",
-  "created_utc": "2026-08-02T01:39:26.321412+00:00",
+  "created_utc": "2026-08-02T01:42:56.610077+00:00",
   "class_order": [
     "airplane",
     "automobile",
@@ -45,7 +45,7 @@
     "dynamic_batch": true,
     "parity": {
       "max_abs_diff": 1.1920928955078125e-07,
-      "mean_abs_diff": 2.950429916381836e-08,
+      "mean_abs_diff": 3.6656856536865234e-08,
       "passed": true,
       "tolerance": 0.0001,
       "batch_sizes": [
