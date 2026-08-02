@@ -1,0 +1,12 @@
+# Local/dev serve profile (non-production).
+app_env: development
+oidc_mode: static
+oidc_issuer: https://cifar-cnn.local/test
+oidc_audience: cifar-cnn-api
+model_bundle_path: models/bundles/simple_cnn-1.0.1
+max_upload_bytes: 1000000
+rate_limit_per_minute: 60
+predict_timeout_sec: 5
+top_k_max: 5
+allow_anon_predict: false
+require_auth_for_ready: false

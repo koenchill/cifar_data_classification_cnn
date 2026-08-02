@@ -4,7 +4,7 @@
 |---|---|
 | Release | C |
 | Depends | Phase 10 |
-| Status | `todo` |
+| Status | `done` |
 | Evidence | `docs/evidence/release-c/phase-11-gate.md` |
 
 ## Objective
@@ -33,27 +33,27 @@ Implement enterprise-hardening requirements in the application boundary.
 
 ### Authentication
 
-  - [ ] OIDC validation: issuer, audience, signature, exp/nbf, scopes, key rotation
+  - [x] OIDC validation: issuer, audience, signature, exp/nbf, scopes, key rotation
 
 ### Authorization
 
-  - [ ] Scopes/roles for predict/metadata/health/admin; deny-by-default RBAC
+  - [x] Scopes/roles for predict/metadata/health/admin; deny-by-default RBAC
 
 ### Input security
 
-  - [ ] Content-type/magic bytes, size, dimensions, decompression, color modes, timeout, safe errors
+  - [x] Content-type/magic bytes, size, dimensions, decompression, color modes, timeout, safe errors
 
 ### Abuse controls
 
-  - [ ] Rate limits, quotas, concurrency, timeouts, top-k bounds, backpressure, 413/429
+  - [x] Rate limits, quotas, concurrency, timeouts, top-k bounds, backpressure, 413/429
 
 ### Audit
 
-  - [ ] Timestamp, correlation ID, subject, action, model/version, authz, security events, latency, status
+  - [x] Timestamp, correlation ID, subject, action, model/version, authz, security events, latency, status
 
 ### Secrets/config
 
-  - [ ] Runtime secrets; validate env; redact logs; fail startup on invalid security settings
+  - [x] Runtime secrets; validate env; redact logs; fail startup on invalid security settings
 
 ## Deliverables
 
@@ -63,8 +63,8 @@ Implement enterprise-hardening requirements in the application boundary.
 
 ## Exit gate
 
-- [ ] OIDC/RBAC suites pass; malformed/oversized fail safely
-- [ ] 401/403/413/429 stable; audit completeness/redaction pass
+- [x] OIDC/RBAC suites pass; malformed/oversized fail safely
+- [x] 401/403/413/429 stable; audit completeness/redaction pass
 
 ## Verify
 
@@ -84,8 +84,8 @@ Do not start the next phase.
 
 ## Done when
 
-- [ ] All workstream tasks complete
-- [ ] Deliverables exist at listed paths
-- [ ] Exit gate criteria satisfied
-- [ ] Verify commands recorded/pass
-- [ ] No global stop condition triggered
+- [x] All workstream tasks complete
+- [x] Deliverables exist at listed paths
+- [x] Exit gate criteria satisfied
+- [x] Verify commands recorded/pass
+- [x] No global stop condition triggered
