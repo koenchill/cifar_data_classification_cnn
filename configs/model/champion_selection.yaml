@@ -1,0 +1,21 @@
+# Frozen before official-test evaluation. Val metrics only.
+rule_name: release-b-champion-v1
+primary_metric: val_macro_f1
+secondary_metric: val_accuracy
+tertiary_metric: val_ece  # lower better
+forbid_official_test_fields:
+  - test_accuracy
+  - test_macro_f1
+  - official_test_accuracy
+  - official_test_macro_f1
+envelope:
+  max_size_mb: 50.0
+  max_latency_ms: 500.0
+  max_param_millions: 15.0
+candidates:
+  - simple_cnn_baseline
+  - improved_cnn_reg
+  - resnet18_transfer
+reviews_required:
+  - model_owner
+  - ai_risk

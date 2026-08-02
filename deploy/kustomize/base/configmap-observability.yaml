@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: api-observability
+  labels:
+    cifar-cnn.io/observability: "true"
+data:
+  # Structured log / OTel hints consumed by sidecars or cluster agents.
+  OTEL_SERVICE_NAME: cifar-cnn-api
+  OTEL_TRACES_EXPORTER: otlp
+  OTEL_METRICS_EXPORTER: otlp
+  OTEL_LOGS_EXPORTER: otlp
+  LOG_LEVEL: INFO
+  # SLO targets (documented; alert rules mirror these)
+  SLO_AVAILABILITY: "99.5"
+  SLO_P95_LATENCY_MS: "500"
+  SLO_ERROR_RATE: "0.01"

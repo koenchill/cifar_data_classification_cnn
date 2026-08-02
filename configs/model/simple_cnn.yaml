@@ -1,0 +1,15 @@
+# Guide Step 2 — baseline SimpleCNN (do not alter for Release A baseline path).
+name: SimpleCNN
+input_shape: [3, 32, 32]
+num_classes: 10
+layers:
+  conv1: { in_channels: 3, out_channels: 32, kernel_size: 3, padding: 1 }
+  pool: { kernel_size: 2, stride: 2 }
+  conv2: { in_channels: 32, out_channels: 64, kernel_size: 3, padding: 1 }
+  conv3: { in_channels: 64, out_channels: 64, kernel_size: 3, padding: 1 }
+  fc1: { in_features: 1024, out_features: 64 }
+  fc2: { in_features: 64, out_features: 10 }
+batch_norm: false
+dropout: false
+output: logits
+trusted_artifact_format: state_dict_pth

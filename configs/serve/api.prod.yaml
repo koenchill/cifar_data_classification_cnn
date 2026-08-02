@@ -1,0 +1,12 @@
+# Production serve profile — requires JWKS OIDC; anon predict forbidden.
+app_env: production
+oidc_mode: jwks
+# Set at runtime:
+# OIDC_ISSUER, OIDC_AUDIENCE, OIDC_JWKS_URL, CIFAR_CNN_BUNDLE_HMAC_KEY
+model_bundle_path: /var/lib/cifar-cnn/bundles/current
+max_upload_bytes: 1000000
+rate_limit_per_minute: 120
+predict_timeout_sec: 3
+top_k_max: 5
+allow_anon_predict: false
+require_auth_for_ready: false

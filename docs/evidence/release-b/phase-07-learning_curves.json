@@ -1,0 +1,91 @@
+{
+  "protocol": {
+    "seeds": "fixed per suite",
+    "optimizer": "Adam(lr=0.001)",
+    "loss": "CrossEntropyLoss",
+    "eval_augmented": false,
+    "variants": [
+      {
+        "name": "baseline",
+        "model_factory": "simple",
+        "batch_norm": false,
+        "dropout": false,
+        "train_augment": false
+      },
+      {
+        "name": "aug_only",
+        "model_factory": "simple",
+        "batch_norm": false,
+        "dropout": false,
+        "train_augment": true
+      },
+      {
+        "name": "reg_only",
+        "model_factory": "improved",
+        "batch_norm": true,
+        "dropout": true,
+        "train_augment": false
+      },
+      {
+        "name": "combined",
+        "model_factory": "improved",
+        "batch_norm": true,
+        "dropout": true,
+        "train_augment": true
+      }
+    ]
+  },
+  "results": [
+    {
+      "name": "baseline",
+      "train_augment": false,
+      "batch_norm": false,
+      "dropout": false,
+      "final_train_loss": 1.9774773915608723,
+      "final_eval_loss": 1.6150002479553223,
+      "loss_curve": [
+        2.2015087604522705,
+        1.9774773915608723
+      ]
+    },
+    {
+      "name": "aug_only",
+      "train_augment": true,
+      "batch_norm": false,
+      "dropout": false,
+      "final_train_loss": 1.9774773915608723,
+      "final_eval_loss": 1.6150002479553223,
+      "loss_curve": [
+        2.2015087604522705,
+        1.9774773915608723
+      ]
+    },
+    {
+      "name": "reg_only",
+      "train_augment": false,
+      "batch_norm": true,
+      "dropout": true,
+      "final_train_loss": 2.2244087060292563,
+      "final_eval_loss": 2.213294506072998,
+      "loss_curve": [
+        2.2392663955688477,
+        2.2244087060292563
+      ]
+    },
+    {
+      "name": "combined",
+      "train_augment": true,
+      "batch_norm": true,
+      "dropout": true,
+      "final_train_loss": 2.2246593634287515,
+      "final_eval_loss": 2.213369131088257,
+      "loss_curve": [
+        2.238044341405233,
+        2.2246593634287515
+      ]
+    }
+  ],
+  "residual_risk": "Short smoke ablations on synthetic/FakeCIFAR do not prove real-world generalization; overfitting risk remains (AIR-03).",
+  "dataset": "FakeCIFAR10-smoke",
+  "non_production": true
+}

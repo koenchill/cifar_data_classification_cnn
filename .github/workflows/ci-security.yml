@@ -1,0 +1,202 @@
+# AppSec gates: SAST (Bandit + Semgrep), SCA (pip-audit allowlist + Trivy fs + OSV),
+# DAST (OWASP ZAP baseline against ephemeral local API).
+# No cloud apply credentials. Actions pinned by commit SHA where used.
+
+name: ci-security
+
+on:
+  pull_request:
+  push:
+    branches: [dev, main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: none
+  security-events: write
+
+concurrency:
+  group: ci-security-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  DAST_PORT: "8765"
+  SEMGREP_IMAGE: semgrep/semgrep:1.110.0
+  TRIVY_IMAGE: aquasec/trivy:0.66.0
+  OSV_IMAGE: ghcr.io/google/osv-scanner:v2.4.0
+  ZAP_IMAGE: ghcr.io/zaproxy/zaproxy:2.16.1
+
+jobs:
+  sast:
+    name: sast
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Set up Python
+        uses: actions/setup-python@8d9ed9ac5c53483de85588cdf95a591a75ab9f55 # v5.5.0
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install Bandit
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install "bandit==1.8.0"
+
+      - name: Bandit SAST
+        run: |
+          mkdir -p artifacts/security
+          bandit -c pyproject.toml -r src -f json -o artifacts/security/sast-bandit.json
+          bandit -c pyproject.toml -r src
+
+      - name: Semgrep SAST
+        run: |
+          mkdir -p artifacts/security
+          docker run --rm \
+            -v "$PWD:/src" \
+            -w /src \
+            "$SEMGREP_IMAGE" \
+            semgrep scan \
+              --config p/python \
+              --config p/owasp-top-ten \
+              --error \
+              --metrics=off \
+              --json \
+              --output /src/artifacts/security/sast-semgrep.json \
+              src
+
+      - name: Upload SAST reports
+        if: always()
+        uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 # v4.6.0
+        with:
+          name: sast-reports
+          path: artifacts/security/sast-*.json
+
+  sca:
+    name: sca
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Set up Python
+        uses: actions/setup-python@8d9ed9ac5c53483de85588cdf95a591a75ab9f55 # v5.5.0
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install package + SCA tools
+        run: |
+          python -m pip install --upgrade pip setuptools wheel
+          python -m pip install -e ".[dev]" \
+            --extra-index-url https://download.pytorch.org/whl/cpu
+          mkdir -p artifacts/security
+
+      - name: pip-audit SCA + allowlist gate
+        run: |
+          pip-audit --progress-spinner off -f json -o artifacts/security/sca-pip-audit.json || true
+          python scripts/check_sca_allowlist.py --report artifacts/security/sca-pip-audit.json
+
+      - name: Trivy filesystem SCA (CRITICAL gate)
+        run: |
+          docker run --rm \
+            -v "$PWD:/work" \
+            -w /work \
+            "$TRIVY_IMAGE" fs \
+              --severity CRITICAL \
+              --ignore-unfixed \
+              --exit-code 1 \
+              --format json \
+              --output artifacts/security/sca-trivy.json \
+              .
+
+      - name: OSV-Scanner SCA
+        run: |
+          # Inventory report (allowlisted residuals expected). Artifact is the contract.
+          docker run --rm \
+            -v "$PWD:/src" \
+            -w /src \
+            "$OSV_IMAGE" \
+            scan source \
+              --format=json \
+              --output=/src/artifacts/security/sca-osv.json \
+              /src \
+            || true
+          test -s artifacts/security/sca-osv.json || echo '{"results":[],"note":"osv-empty-or-tool-warning"}' > artifacts/security/sca-osv.json
+
+      - name: Upload SCA reports
+        if: always()
+        uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 # v4.6.0
+        with:
+          name: sca-reports
+          path: artifacts/security/sca-*.json
+
+  dast:
+    name: dast
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Set up Python
+        uses: actions/setup-python@8d9ed9ac5c53483de85588cdf95a591a75ab9f55 # v5.5.0
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install package (CPU torch index)
+        run: |
+          python -m pip install --upgrade pip setuptools wheel
+          python -m pip install -e ".[dev]" \
+            --extra-index-url https://download.pytorch.org/whl/cpu
+          mkdir -p artifacts/security
+
+      - name: Start DAST target API
+        run: |
+          python scripts/start_dast_target.py --host 127.0.0.1 --port "$DAST_PORT" \
+            > artifacts/security/dast-target.log 2>&1 &
+          echo $! > artifacts/security/dast-target.pid
+          for i in $(seq 1 60); do
+            if curl -fsS "http://127.0.0.1:${DAST_PORT}/health" >/dev/null; then
+              echo "DAST target healthy"
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "DAST target failed to become healthy" >&2
+          cat artifacts/security/dast-target.log >&2 || true
+          exit 1
+
+      - name: OWASP ZAP baseline DAST
+        run: |
+          docker run --rm --network host \
+            -v "$PWD/artifacts/security:/zap/wrk:rw" \
+            -t "$ZAP_IMAGE" \
+            zap-baseline.py \
+              -t "http://127.0.0.1:${DAST_PORT}" \
+              -r dast-zap.html \
+              -J dast-zap.json \
+              -I
+          # -I: do not fail on WARN (informational noise); FAIL severities still fail the job.
+
+      - name: Stop DAST target
+        if: always()
+        run: |
+          if [ -f artifacts/security/dast-target.pid ]; then
+            kill "$(cat artifacts/security/dast-target.pid)" || true
+          fi
+
+      - name: Upload DAST reports
+        if: always()
+        uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 # v4.6.0
+        with:
+          name: dast-reports
+          path: |
+            artifacts/security/dast-zap.html
+            artifacts/security/dast-zap.json
+            artifacts/security/dast-target.log

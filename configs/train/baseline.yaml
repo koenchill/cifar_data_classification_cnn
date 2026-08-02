@@ -1,0 +1,14 @@
+# Guide Steps 3–4 baseline training — do not alter hyperparams for Release A path.
+model: SimpleCNN
+epochs: 10
+lr: 0.001
+optimizer: Adam
+loss: CrossEntropyLoss
+batch_size: 32
+seed: 42
+device: cpu
+log_every_n_batches: 100
+data_config: configs/data/baseline.yaml
+artifact_dir: artifacts/baseline
+# Full 10-epoch CIFAR run is offline; PR/smoke uses limited batches.
+smoke_max_batches: null

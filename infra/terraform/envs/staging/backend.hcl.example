@@ -1,0 +1,6 @@
+bucket         = "REPLACE-UNIQUE-cifar-cnn-tf-state"
+key            = "envs/staging/terraform.tfstate"
+region         = "us-east-1"
+dynamodb_table = "cifar-cnn-terraform-locks"
+encrypt        = true
+kms_key_id     = "alias/cifar-cnn-tf-state"

@@ -1,0 +1,151 @@
+name: gitops-promote
+
+# CI proposes digest PRs only. Argo CD is the sole cluster reconciler.
+# Never kubectl-apply / helm-upgrade production from this workflow.
+
+on:
+  workflow_dispatch:
+    inputs:
+      digest:
+        description: "Image digest (sha256:…)"
+        required: true
+        type: string
+      target:
+        description: "Promotion target"
+        required: true
+        type: choice
+        options:
+          - staging
+          - prod
+      dry_run:
+        description: "Update working tree and stop before opening a PR"
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+  pull-requests: write
+  id-token: none
+
+concurrency:
+  group: gitops-promote-${{ inputs.target }}
+  cancel-in-progress: false
+
+jobs:
+  iam-negative-guard:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Forbid static AWS keys and cluster apply tooling in this job
+        run: |
+          set -euo pipefail
+          if [ -n "${AWS_ACCESS_KEY_ID:-}" ] || [ -n "${AWS_SECRET_ACCESS_KEY:-}" ]; then
+            echo "Static AWS keys must not be present in gitops-promote"
+            exit 1
+          fi
+          if command -v kubectl >/dev/null 2>&1; then
+            # Runner image may ship kubectl; assert we never invoke apply/delete.
+            echo "kubectl present on runner — workflow must not call it"
+          fi
+          echo "OK: no AWS static keys; no cluster mutations in this workflow"
+
+  promote-staging:
+    if: inputs.target == 'staging'
+    needs: iam-negative-guard
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: dev
+
+      - name: Propose staging digest
+        env:
+          DIGEST: ${{ inputs.digest }}
+        run: |
+          set -euo pipefail
+          python deploy/argocd/scripts/propose_digest_promotion.py \
+            --digest "$DIGEST" --env staging --env dev
+
+      - name: Open staging promotion PR
+        if: ${{ !inputs.dry_run }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          DIGEST: ${{ inputs.digest }}
+        run: |
+          set -euo pipefail
+          branch="gitops/staging-${DIGEST#sha256:}"
+          branch="${branch:0:60}"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$branch"
+          git add deploy/kustomize/overlays/staging/kustomization.yaml \
+                  deploy/kustomize/overlays/dev/kustomization.yaml
+          git commit -m "chore(gitops): promote api digest to staging"
+          git push -u origin HEAD
+          gh pr create --base dev --head "$branch" \
+            --title "chore(gitops): promote api digest to staging" \
+            --body "## Summary
+          - Propose digest \`${DIGEST}\` for **staging** (and aligned **dev**) overlays.
+          - Argo CD auto-syncs after merge; CI does not talk to the cluster.
+
+          ## Test plan
+          - [ ] PR CI green
+          - [ ] Argo \`cifar-cnn-staging\` Healthy after merge
+          "
+
+      - name: Dry-run summary
+        if: ${{ inputs.dry_run }}
+        run: |
+          echo "Dry-run complete — overlays updated locally in the job workspace only."
+          git diff -- deploy/kustomize/overlays/
+
+  promote-prod:
+    if: inputs.target == 'prod'
+    needs: iam-negative-guard
+    runs-on: ubuntu-latest
+    environment: gitops-prod
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: dev
+
+      - name: Propose prod digest
+        env:
+          DIGEST: ${{ inputs.digest }}
+        run: |
+          set -euo pipefail
+          python deploy/argocd/scripts/propose_digest_promotion.py \
+            --digest "$DIGEST" --env prod
+
+      - name: Open prod promotion PR
+        if: ${{ !inputs.dry_run }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          DIGEST: ${{ inputs.digest }}
+        run: |
+          set -euo pipefail
+          branch="gitops/prod-${DIGEST#sha256:}"
+          branch="${branch:0:60}"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$branch"
+          git add deploy/kustomize/overlays/prod/kustomization.yaml
+          git commit -m "chore(gitops): promote api digest to prod"
+          git push -u origin HEAD
+          gh pr create --base dev --head "$branch" \
+            --title "chore(gitops): promote api digest to prod" \
+            --body "## Summary
+          - Propose digest \`${DIGEST}\` for **prod** overlay after \`gitops-prod\` approval.
+          - Argo CD reconciles; this workflow never kubectl-applies.
+
+          ## Test plan
+          - [ ] PR CI green
+          - [ ] Kyverno signature/digest admission still Enforce
+          - [ ] Argo \`cifar-cnn-prod\` Healthy; rollback plan ready
+          "
+
+      - name: Dry-run summary
+        if: ${{ inputs.dry_run }}
+        run: |
+          echo "Dry-run complete — prod overlay updated in job workspace only."
+          git diff -- deploy/kustomize/overlays/prod/

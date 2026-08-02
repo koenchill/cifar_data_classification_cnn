@@ -1,0 +1,10 @@
+# Required reviewers for security / infra / GitOps paths (Phase 1).
+# Update team handles when available.
+
+* @koenchill
+
+/.github/ @koenchill
+/deploy/ @koenchill
+/infra/ @koenchill
+/docs/governance/ @koenchill
+/docs/architecture/ @koenchill

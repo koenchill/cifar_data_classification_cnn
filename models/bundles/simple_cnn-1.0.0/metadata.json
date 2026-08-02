@@ -1,0 +1,77 @@
+{
+  "bundle_id": "simple_cnn",
+  "version": "1.0.0",
+  "model_name": "SimpleCNN",
+  "champion_id": "simple_cnn_baseline",
+  "created_utc": "2026-08-02T01:42:56.610077+00:00",
+  "class_order": [
+    "airplane",
+    "automobile",
+    "bird",
+    "cat",
+    "deer",
+    "dog",
+    "frog",
+    "horse",
+    "ship",
+    "truck"
+  ],
+  "normalization": {
+    "mean": [
+      0.5,
+      0.5,
+      0.5
+    ],
+    "std": [
+      0.5,
+      0.5,
+      0.5
+    ]
+  },
+  "input_constraints": {
+    "shape": [
+      null,
+      3,
+      32,
+      32
+    ],
+    "dtype": "float32",
+    "layout": "NCHW"
+  },
+  "onnx": {
+    "opset": 17,
+    "input_name": "input",
+    "output_name": "logits",
+    "dynamic_batch": true,
+    "parity": {
+      "max_abs_diff": 1.1920928955078125e-07,
+      "mean_abs_diff": 3.6656856536865234e-08,
+      "passed": true,
+      "tolerance": 0.0001,
+      "batch_sizes": [
+        1,
+        4
+      ],
+      "notes": [
+        "opset documented as 17",
+        "input=input output=logits",
+        "dynamic batch axis enabled on export"
+      ]
+    }
+  },
+  "metrics_summary": {
+    "source": "phase-09-champion-decision"
+  },
+  "limitations": [
+    "Educational CIFAR-10 domain only; non-production",
+    "Softmax confidence is not proof of correctness",
+    "HMAC signature uses CI/dev key unless CIFAR_CNN_BUNDLE_HMAC_KEY is set"
+  ],
+  "identities": {
+    "training": "training",
+    "eval": "eval",
+    "release": "release",
+    "model_owner": "koenchill"
+  },
+  "non_production": true
+}

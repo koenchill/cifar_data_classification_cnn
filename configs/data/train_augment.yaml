@@ -1,0 +1,14 @@
+# Train-only augmentation (Release B). Eval/test must use guide transform.
+name: train_augment_v1
+applies_to: train_only
+forbidden_for: [test, val_eval]
+augmentation_on_eval: false
+color_jitter: false
+random_crop:
+  size: 32
+  padding: 4
+random_horizontal_flip:
+  p: 0.5
+normalize:
+  mean: [0.5, 0.5, 0.5]
+  std: [0.5, 0.5, 0.5]

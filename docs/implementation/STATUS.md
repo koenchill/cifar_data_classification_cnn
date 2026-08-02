@@ -1,0 +1,24 @@
+# Execution status
+
+| Phase | Status | Notes |
+|---|---|---|
+| 00 Governance | `done` | Gate: docs/evidence/release-0/phase-00-gate.md |
+| 01 Secure repo / CI | `done` | Gate: docs/evidence/release-0/phase-01-gate.md; CYB-07 torch audit exception |
+| 02 Data contract | `done` | Gate: docs/evidence/release-a/phase-02-gate.md |
+| 03 SimpleCNN | `done` | Gate: docs/evidence/release-a/phase-03-gate.md |
+| 04 Baseline training | `done` | Gate: docs/evidence/release-a/phase-04-gate.md |
+| 05 Baseline evaluation (Release A) | `done` | Gate: docs/evidence/release-a/phase-05-gate.md; Release A closed |
+| 06 Training controls | `done` | Gate: docs/evidence/release-b/phase-06-gate.md |
+| 07 Improved CNN | `done` | Gate: docs/evidence/release-b/phase-07-gate.md |
+| 08 Rigorous evaluation | `done` | Gate: docs/evidence/release-b/phase-08-gate.md |
+| 09 Transfer / champion | `done` | Gate: docs/evidence/release-b/phase-09-gate.md |
+| 10 Model bundle (Release B) | `done` | Gate: docs/evidence/release-b/phase-10-gate.md; Release B closed |
+| 11 Secure API | `done` | Gate: docs/evidence/release-c/phase-11-gate.md |
+| 12 Docker envelope (Release C) | `done` | Gate: docs/evidence/release-c/phase-12-gate.md; Release C closed |
+| 13 Terraform / EKS | `done` | Gate: docs/evidence/release-d/phase-13-gate.md |
+| 14 K8s runtime | `done` | Gate: docs/evidence/release-d/phase-14-gate.md |
+| 15 Argo CD (Release D) | `done` | Gate: docs/evidence/release-d/phase-15-gate.md; Release D closed |
+| 16 Verification / QA | `done` | Gate: docs/evidence/release-e/phase-16-gate.md |
+| 17 Ops release (Release E) | `done` | Gate: docs/evidence/release-e/phase-17-gate.md; Release E closed |
+
+Update status to `in_progress`, `blocked`, or `done` as phases complete.

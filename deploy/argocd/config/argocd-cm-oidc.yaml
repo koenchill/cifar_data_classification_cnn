@@ -1,0 +1,29 @@
+# Desired Argo CD ConfigMap values for human SSO.
+# Client secrets must come from External Secrets / sealed store — never from git.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-cm
+  namespace: argocd
+  labels:
+    app.kubernetes.io/name: argocd-cm
+    app.kubernetes.io/part-of: argocd
+data:
+  url: https://argocd.example.internal
+  # Disable local admin after OIDC groups are validated in the target cluster.
+  admin.enabled: "false"
+  oidc.config: |
+    name: EnterpriseIdP
+    issuer: https://login.example.com/oauth2/default
+    clientID: $oidc.clientID
+    clientSecret: $oidc.clientSecret
+    requestedScopes:
+      - openid
+      - profile
+      - email
+      - groups
+    requestedIDTokenClaims:
+      groups:
+        essential: true
+  accounts.ci-readonly: apiKey
+  accounts.ci-readonly.enabled: "true"
