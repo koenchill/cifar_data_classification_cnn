@@ -1,0 +1,80 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: cifar-cnn
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  description: CIFAR-CNN inference apps — desired-state from this repo only
+  sourceRepos:
+    - https://github.com/koenchill/cifar_data_classification_cnn.git
+  destinations:
+    - namespace: cifar-cnn
+      server: https://kubernetes.default.svc
+    - namespace: cifar-cnn-*
+      server: https://kubernetes.default.svc
+  # Apps must not mutate cluster-scoped resources ad hoc
+  clusterResourceWhitelist: []
+  namespaceResourceWhitelist:
+    - group: ""
+      kind: Namespace
+    - group: ""
+      kind: ConfigMap
+    - group: ""
+      kind: Secret
+    - group: ""
+      kind: Service
+    - group: ""
+      kind: ServiceAccount
+    - group: ""
+      kind: ResourceQuota
+    - group: ""
+      kind: LimitRange
+    - group: apps
+      kind: Deployment
+    - group: autoscaling
+      kind: HorizontalPodAutoscaler
+    - group: policy
+      kind: PodDisruptionBudget
+    - group: networking.k8s.io
+      kind: NetworkPolicy
+    - group: rbac.authorization.k8s.io
+      kind: Role
+    - group: rbac.authorization.k8s.io
+      kind: RoleBinding
+    - group: external-secrets.io
+      kind: ExternalSecret
+    - group: external-secrets.io
+      kind: SecretStore
+    - group: monitoring.coreos.com
+      kind: PrometheusRule
+  orphanedResources:
+    warn: true
+  roles:
+    - name: readonly
+      description: View applications only
+      policies:
+        - p, proj:cifar-cnn:readonly, applications, get, cifar-cnn/*, allow
+      groups:
+        - cifar-cnn:viewers
+    - name: staging-operator
+      description: Sync staging only — no exec, override, or delete
+      policies:
+        - p, proj:cifar-cnn:staging-operator, applications, get, cifar-cnn/cifar-cnn-staging, allow
+        - p, proj:cifar-cnn:staging-operator, applications, sync, cifar-cnn/cifar-cnn-staging, allow
+        - p, proj:cifar-cnn:staging-operator, applications, action/*, cifar-cnn/*, deny
+        - p, proj:cifar-cnn:staging-operator, applications, delete, cifar-cnn/*, deny
+        - p, proj:cifar-cnn:staging-operator, applications, override, cifar-cnn/*, deny
+      groups:
+        - cifar-cnn:staging-operators
+    - name: prod-approver
+      description: Sync prod after Git approval — still no exec/override/delete
+      policies:
+        - p, proj:cifar-cnn:prod-approver, applications, get, cifar-cnn/cifar-cnn-prod, allow
+        - p, proj:cifar-cnn:prod-approver, applications, sync, cifar-cnn/cifar-cnn-prod, allow
+        - p, proj:cifar-cnn:prod-approver, applications, action/*, cifar-cnn/*, deny
+        - p, proj:cifar-cnn:prod-approver, applications, delete, cifar-cnn/*, deny
+        - p, proj:cifar-cnn:prod-approver, applications, override, cifar-cnn/*, deny
+      groups:
+        - cifar-cnn:prod-approvers

@@ -4,7 +4,7 @@
 |---|---|
 | Release | D |
 | Depends | Phase 14 |
-| Status | `todo` |
+| Status | `done` |
 | Evidence | `docs/evidence/release-d/phase-15-gate.md` |
 
 ## Objective
@@ -29,11 +29,11 @@ Make Git the desired-state source and Argo CD the only routine reconciler.
 
 ### Repo model + Argo security
 
-  - [ ] Desired-state isolation; digest pinning; OIDC SSO; AppProjects; deny exec/override/delete
+  - [x] Desired-state isolation; digest pinning; OIDC SSO; AppProjects; deny exec/override/delete
 
 ### Promotion + reconciliation + admission
 
-  - [ ] CI proposes digest; staging auto; prod approved; prune/self-heal; signed-image admission
+  - [x] CI proposes digest; staging auto; prod approved; prune/self-heal; signed-image admission
 
 ## Deliverables
 
@@ -42,8 +42,8 @@ Make Git the desired-state source and Argo CD the only routine reconciler.
 
 ## Exit gate
 
-- [ ] Promotion traces complete; unauthorized actions denied; rollback succeeds
-- [ ] Release D complete
+- [x] Promotion traces complete; unauthorized actions denied; rollback succeeds
+- [x] Release D complete
 
 ## Verify
 
@@ -63,8 +63,8 @@ Do not start the next phase.
 
 ## Done when
 
-- [ ] All workstream tasks complete
-- [ ] Deliverables exist at listed paths
-- [ ] Exit gate criteria satisfied
-- [ ] Verify commands recorded/pass
-- [ ] No global stop condition triggered
+- [x] All workstream tasks complete
+- [x] Deliverables exist at listed paths
+- [x] Exit gate criteria satisfied
+- [x] Verify commands recorded/pass
+- [x] No global stop condition triggered

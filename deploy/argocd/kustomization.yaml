@@ -1,0 +1,12 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - appprojects/cifar-cnn.yaml
+  - applications/cifar-cnn-dev.yaml
+  - applications/cifar-cnn-staging.yaml
+  - applications/cifar-cnn-prod.yaml
+  - policies/kyverno-require-image-digest.yaml
+  - policies/kyverno-verify-signed-images.yaml
+  - config/argocd-cm-oidc.yaml
+  - config/argocd-rbac-cm.yaml

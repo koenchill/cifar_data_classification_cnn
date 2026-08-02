@@ -1,0 +1,35 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: cifar-cnn-verify-signed-images
+  annotations:
+    policies.kyverno.io/title: Verify cosign-signed CIFAR-CNN images
+    policies.kyverno.io/category: Supply Chain
+    policies.kyverno.io/severity: critical
+spec:
+  validationFailureAction: Enforce
+  background: false
+  webhookTimeoutSeconds: 30
+  rules:
+    - name: verify-ghcr-api-image
+      match:
+        any:
+          - resources:
+              kinds:
+                - Pod
+              namespaces:
+                - cifar-cnn
+      verifyImages:
+        - imageReferences:
+            - "ghcr.io/koenchill/cifar_data_classification_cnn/api*"
+          attestors:
+            - entries:
+                - keyless:
+                    # GitHub Actions OIDC identity for this repository's image builds.
+                    issuer: https://token.actions.githubusercontent.com
+                    subject: https://github.com/koenchill/cifar_data_classification_cnn/.github/workflows/ci-image.yml@refs/heads/dev
+                    rekor:
+                      url: https://rekor.sigstore.dev
+          mutateDigest: true
+          required: true
+          verifyDigest: true

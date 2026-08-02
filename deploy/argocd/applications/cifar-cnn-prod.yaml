@@ -1,0 +1,37 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cifar-cnn-prod
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  annotations:
+    cifar-cnn.io/env: prod
+    notifications.argoproj.io/subscribe.on-sync-failed.slack: cifar-cnn-alerts
+    # Promotion into this overlay requires GitHub Environment `gitops-prod` approval.
+spec:
+  project: cifar-cnn
+  source:
+    repoURL: https://github.com/koenchill/cifar_data_classification_cnn.git
+    # Same Git source as staging; human gate is approved digest PRs into this overlay path.
+    targetRevision: dev
+    path: deploy/kustomize/overlays/prod
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: cifar-cnn
+  syncPolicy:
+    # Auto-reconcile after Git merge; human gate is the promotion PR, not kubectl.
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: false
+    syncOptions:
+      - CreateNamespace=false
+      - PrunePropagationPolicy=foreground
+      - ApplyOutOfSyncOnly=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 10s
+        factor: 2
+        maxDuration: 5m
