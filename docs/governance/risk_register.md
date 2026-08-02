@@ -27,7 +27,7 @@
 |---|---|---|---|---|---|---|---|---|---|---|
 | AIR-01 | Users over-trust CIFAR accuracy on real photos | 4 | 3 | 12 | Document prohibited uses; uncertain flags later | Model | Rel A | Medium | Pending A card | — |
 | AIR-02 | Test leakage invalidates metrics | 2 | 4 | 8 | Locked test; contract tests | Data | Rel A | Low | — | — |
-| AIR-03 | Overfitting / weak generalization | 3 | 3 | 9 | Val protocol; aug/reg in B; model card | Model | Rel B | Medium | — | — |
+| AIR-03 | Overfitting / weak generalization | 3 | 3 | 9 | Val protocol; Phase 7 aug/BN/dropout + ablations; model card; residual until Phase 8–9 rigor/champion | Model | Rel B | Medium | Treating (Phase 7 evidence) | — |
 | AIR-04 | Irreproducible champion | 2 | 4 | 8 | Seeds, configs, identities | Model | Rel B | Low | — | — |
 | AIR-05 | High-confidence OOD errors in API | 3 | 4 | 12 | Robustness tests; low-confidence responses | Model/App | Rel B/C | Medium | Prod block if untreated | — |
 

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -15,7 +16,7 @@ from cifar_cnn.data.constants import (
     TEST_SIZE,
     TRAIN_SIZE,
 )
-from cifar_cnn.data.transforms import build_guide_transform
+from cifar_cnn.data.transforms import build_eval_transform, build_guide_transform
 
 
 @dataclass(frozen=True)
@@ -56,6 +57,39 @@ def load_cifar10_datasets(
         train=False,
         download=cfg.download,
         transform=transform,
+    )
+    if len(trainset) != TRAIN_SIZE:
+        raise ValueError(f"Expected train size {TRAIN_SIZE}, got {len(trainset)}")
+    if len(testset) != TEST_SIZE:
+        raise ValueError(f"Expected test size {TEST_SIZE}, got {len(testset)}")
+    return trainset, testset
+
+
+def load_cifar10_train_eval_datasets(
+    config: GuideDataConfig | None = None,
+    *,
+    train_transform: Callable[[Any], Any] | None = None,
+    eval_transform: Callable[[Any], Any] | None = None,
+) -> tuple[CIFAR10, CIFAR10]:
+    """Additive loader: train transform may augment; eval never should.
+
+    Defaults preserve guide transforms when both are omitted.
+    """
+    cfg = config or GuideDataConfig()
+    train_tf = train_transform or build_guide_transform()
+    eval_tf = eval_transform or build_eval_transform()
+    root = str(resolve_data_root(cfg.root))
+    trainset = CIFAR10(
+        root=root,
+        train=True,
+        download=cfg.download,
+        transform=train_tf,
+    )
+    testset = CIFAR10(
+        root=root,
+        train=False,
+        download=cfg.download,
+        transform=eval_tf,
     )
     if len(trainset) != TRAIN_SIZE:
         raise ValueError(f"Expected train size {TRAIN_SIZE}, got {len(trainset)}")
