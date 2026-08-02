@@ -1,0 +1,21 @@
+# ResNet18 transfer candidate (Release B). Pretrained download is offline/opt-in.
+name: ResNet18CIFAR
+architecture: torchvision.resnet18
+adapted_for_cifar: true
+num_classes: 10
+pretrained: false  # set true offline to use IMAGENET1K_V1
+freeze_mode: backbone
+weights:
+  name: ResNet18_Weights.IMAGENET1K_V1
+  url: https://download.pytorch.org/models/resnet18-f37072fd.pth
+  license_note: >
+    Torchvision BSD-3-Clause code; ImageNet-1K weights redistributed by PyTorch for
+    research/education — review current terms before commercial use.
+preprocessing:
+  cifar_adapted_stem: true
+  imagenet_normalize_when_pretrained:
+    mean: [0.485, 0.456, 0.406]
+    std: [0.229, 0.224, 0.225]
+classifier: Linear(512, 10)
+output: logits
+trusted_artifact_format: state_dict_pth

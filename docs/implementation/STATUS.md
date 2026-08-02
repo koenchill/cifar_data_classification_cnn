@@ -11,7 +11,7 @@
 | 06 Training controls | `done` | Gate: docs/evidence/release-b/phase-06-gate.md |
 | 07 Improved CNN | `done` | Gate: docs/evidence/release-b/phase-07-gate.md |
 | 08 Rigorous evaluation | `done` | Gate: docs/evidence/release-b/phase-08-gate.md |
-| 09 Transfer / champion | `todo` | |
+| 09 Transfer / champion | `done` | Gate: docs/evidence/release-b/phase-09-gate.md |
 | 10 Model bundle (Release B) | `todo` | |
 | 11 Secure API | `todo` | |
 | 12 Docker envelope (Release C) | `todo` | |

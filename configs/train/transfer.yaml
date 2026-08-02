@@ -1,0 +1,14 @@
+# Offline transfer fine-tune defaults (not used in PR CI downloads).
+model: ResNet18CIFAR
+pretrained: true
+freeze_mode: backbone
+epochs: 5
+lr: 0.001
+batch_size: 32
+seed: 42
+device: cpu
+artifact_dir: artifacts/transfer
+identity: training
+notes: >
+  Full pretrained fine-tune is offline. CI/smoke uses pretrained=false random init
+  with the same CIFAR-adapted architecture for protocol tests only.

@@ -1,0 +1,84 @@
+{
+  "split": "validation_smoke_FakeCIFAR",
+  "official_test_used": false,
+  "transfer_stack": {
+    "architecture": "torchvision.models.resnet18",
+    "weights_name": "None (random init; CI/smoke)",
+    "weights_url": null,
+    "license_note": "Torchvision model code BSD-3-Clause; no pretrained weight download.",
+    "preprocessing": "CIFAR-adapted 32x32 stem; guide or ImageNet normalize per config",
+    "classifier": "fc replaced with Linear(512, 10)",
+    "freeze_mode": "none",
+    "adapted_for_cifar": true,
+    "input_shape": [
+      3,
+      32,
+      32
+    ],
+    "output": "logits",
+    "supply_chain": {
+      "source": "torchvision",
+      "pin_recommendation": "torchvision==0.22.1 with torch==2.7.1",
+      "hash_pin": "Record SHA-256 of downloaded .pth before fine-tune (offline)"
+    }
+  },
+  "candidates": [
+    {
+      "candidate_id": "simple_cnn_baseline",
+      "model_name": "SimpleCNN",
+      "val_accuracy": 1.0,
+      "val_macro_f1": 0.1,
+      "val_ece": 0.8512665182352066,
+      "robustness_pass_rate": 1.0,
+      "latency_ms": 0.23937999503687024,
+      "size_mb": 0.46756744384765625,
+      "param_millions": 0.12257,
+      "interpretability_score": 0.8,
+      "security_ops_score": 0.5,
+      "cost_score": 0.9922072092692057,
+      "notes": "val_batches<=4; avg_loss=1.9055994749069214; trainable_m=0.123",
+      "test_accuracy": null,
+      "test_macro_f1": null,
+      "official_test_accuracy": null,
+      "official_test_macro_f1": null
+    },
+    {
+      "candidate_id": "improved_cnn_reg",
+      "model_name": "ImprovedCNN",
+      "val_accuracy": 0.0,
+      "val_macro_f1": 0.0,
+      "val_ece": 0.10759545862674713,
+      "robustness_pass_rate": 1.0,
+      "latency_ms": 0.49835999961942434,
+      "size_mb": 0.47003173828125,
+      "param_millions": 0.12289,
+      "interpretability_score": 0.8,
+      "security_ops_score": 0.5,
+      "cost_score": 0.9921661376953125,
+      "notes": "val_batches<=4; avg_loss=2.2757296562194824; trainable_m=0.123",
+      "test_accuracy": null,
+      "test_macro_f1": null,
+      "official_test_accuracy": null,
+      "official_test_macro_f1": null
+    },
+    {
+      "candidate_id": "resnet18_transfer",
+      "model_name": "ResNet18CIFAR",
+      "val_accuracy": 0.0,
+      "val_macro_f1": 0.0,
+      "val_ece": 0.10265140980482101,
+      "robustness_pass_rate": 1.0,
+      "latency_ms": 13.952379999682307,
+      "size_mb": 42.66205596923828,
+      "param_millions": 11.173962,
+      "interpretability_score": 0.6,
+      "security_ops_score": 0.5,
+      "cost_score": 0.28896573384602864,
+      "notes": "val_batches<=4; avg_loss=2.2844767570495605; trainable_m=11.174",
+      "test_accuracy": null,
+      "test_macro_f1": null,
+      "official_test_accuracy": null,
+      "official_test_macro_f1": null
+    }
+  ]
+}

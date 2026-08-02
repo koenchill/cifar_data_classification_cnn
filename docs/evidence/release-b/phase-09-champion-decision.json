@@ -1,0 +1,33 @@
+{
+  "rule_name": "release-b-champion-v1",
+  "champion_id": "simple_cnn_baseline",
+  "champion_model": "SimpleCNN",
+  "rejected": [
+    {
+      "candidate_id": "resnet18_transfer",
+      "model_name": "ResNet18CIFAR",
+      "reason": "ranked below champion on declared metrics (val_macro_f1=0.0000)"
+    },
+    {
+      "candidate_id": "improved_cnn_reg",
+      "model_name": "ImprovedCNN",
+      "reason": "ranked below champion on declared metrics (val_macro_f1=0.0000)"
+    }
+  ],
+  "ranking": [
+    "simple_cnn_baseline",
+    "resnet18_transfer",
+    "improved_cnn_reg"
+  ],
+  "rationale": [
+    "rule=release-b-champion-v1",
+    "official test metrics are forbidden in selection inputs",
+    "rank by val_macro_f1 desc, val_accuracy desc, val_ece asc, latency_ms asc, size_mb asc",
+    "champion=simple_cnn_baseline val_macro_f1=0.1000 val_acc=1.0000 ece=0.8513"
+  ],
+  "reviews": {
+    "model_owner": "approved-smoke",
+    "ai_risk": "approved-smoke-residual-AIR-01/03/05"
+  },
+  "frozen_before_official_test": true
+}
