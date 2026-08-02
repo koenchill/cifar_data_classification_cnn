@@ -4,7 +4,7 @@
 |---|---|
 | Release | A |
 | Depends | Phase 4 |
-| Status | `todo` |
+| Status | `done` |
 | Evidence | `docs/evidence/release-a/phase-05-gate.md` |
 | Guide steps | §3 Steps 5–7; §1; §4; tough questions |
 
@@ -35,36 +35,36 @@ Close **all** student-guide requirements and Release A with linked evidence (no 
 
 ### Evaluation (Step 5) — exact
 
-  - [ ] `torch.no_grad()` over testloader
-  - [ ] `_, predicted = torch.max(outputs, 1)`
-  - [ ] Account for exactly **10,000** test predictions
-  - [ ] Print/record: `Accuracy of the network on 10,000 test images: {pct}%`
-  - [ ] Prefer `net.eval()` (additive)
-  - [ ] Record loss as additive metric (optional; accuracy is mandatory)
+  - [x] `torch.no_grad()` over testloader
+  - [x] `_, predicted = torch.max(outputs, 1)`
+  - [x] Account for exactly **10,000** test predictions
+  - [x] Print/record: `Accuracy of the network on 10,000 test images: {pct}%`
+  - [x] Prefer `net.eval()` (additive)
+  - [x] Record loss as additive metric (optional; accuracy is mandatory)
 
 ### Visualization (Step 6) — exact + additive
 
-  - [ ] Unnormalize with `img / 2 + 0.5` (equivalent to guide `imshow`)
-  - [ ] Display/save **8** test images
-  - [ ] Each title includes `Actual: {class}` and `Predicted: {class}` using official class names
-  - [ ] Deterministic gallery artifact under `artifacts/` or `docs/evidence/release-a/`
-  - [ ] Additive OK: confidence + correctness flags (do not replace Actual/Predicted)
+  - [x] Unnormalize with `img / 2 + 0.5` (equivalent to guide `imshow`)
+  - [x] Display/save **8** test images
+  - [x] Each title includes `Actual: {class}` and `Predicted: {class}` using official class names
+  - [x] Deterministic gallery artifact under `artifacts/` or `docs/evidence/release-a/`
+  - [x] Additive OK: confidence + correctness flags (do not replace Actual/Predicted)
 
 ### Persistence (Step 7) — exact path compatibility
 
-  - [ ] `torch.save(net.state_dict(), …)`
-  - [ ] Write `models/cnn_model.pth` (repo layout)
-  - [ ] Also write repo-root `cnn_model.pth` **or** prove load-equivalence to guide path in tests
-  - [ ] Verify load + inference in a clean process
-  - [ ] Print/log “Model saved successfully!” (or equivalent evidence)
+  - [x] `torch.save(net.state_dict(), …)`
+  - [x] Write `models/cnn_model.pth` (repo layout)
+  - [x] Also write repo-root `cnn_model.pth` **or** prove load-equivalence to guide path in tests
+  - [x] Verify load + inference in a clean process
+  - [x] Print/log “Model saved successfully!” (or equivalent evidence)
 
 ### Learning evidence (§1, §4, tough questions)
 
-  - [ ] `learning_why_image_classification.md` covering guide §1
-  - [ ] Short note covering guide §4 (DS importance / industries)
-  - [ ] Answer all **20** tough questions from `guide_tough_questions_source.md` in `guide_questions.md`
-  - [ ] Document baseline limitations and **non-production** status
-  - [ ] Mark every row in `GUIDE_TRACEABILITY.md` complete with evidence links
+  - [x] `learning_why_image_classification.md` covering guide §1
+  - [x] Short note covering guide §4 (DS importance / industries)
+  - [x] Answer all **20** tough questions from `guide_tough_questions_source.md` in `guide_questions.md`
+  - [x] Document baseline limitations and **non-production** status
+  - [x] Mark every row in `GUIDE_TRACEABILITY.md` complete with evidence links
 
 ## Deliverables
 
@@ -80,10 +80,10 @@ Close **all** student-guide requirements and Release A with linked evidence (no 
 
 ## Exit gate
 
-- [ ] Every `GUIDE_TRACEABILITY.md` requirement row is satisfied
-- [ ] Steps 5–7 behaviors match the guide (plus documented additive fields only)
-- [ ] All 20 tough questions answered in `guide_questions.md`
-- [ ] No unsupported real-world performance/safety claim; Release A complete when matrix is green
+- [x] Every `GUIDE_TRACEABILITY.md` requirement row is satisfied
+- [x] Steps 5–7 behaviors match the guide (plus documented additive fields only)
+- [x] All 20 tough questions answered in `guide_questions.md`
+- [x] No unsupported real-world performance/safety claim; Release A complete when matrix is green
 
 ## Verify
 
@@ -105,8 +105,8 @@ Do not start the next phase.
 
 ## Done when
 
-- [ ] All workstream tasks complete
-- [ ] Deliverables exist at listed paths
-- [ ] Exit gate criteria satisfied
-- [ ] Verify commands recorded/pass
-- [ ] No global stop condition triggered
+- [x] All workstream tasks complete
+- [x] Deliverables exist at listed paths
+- [x] Exit gate criteria satisfied
+- [x] Verify commands recorded/pass
+- [x] No global stop condition triggered

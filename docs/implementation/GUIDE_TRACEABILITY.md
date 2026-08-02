@@ -7,7 +7,7 @@ Enterprise phases **2–5** (plus Phase 1 tool pinning) must satisfy every row. 
 
 | Guide § | Requirement | Exact contract | Phase | Evidence / test |
 |---|---|---|---|---|
-| 1 | Why image classification matters | Written learning note (CV foundation → detection/segmentation/GANs) | 5 | `docs/evidence/release-a/learning_why_image_classification.md` |
+| 1 | Why image classification matters | Written learning note (CV foundation → detection/segmentation/GANs) | 5 | `docs/evidence/release-a/learning_why_image_classification.md` ✅ |
 | 2 | Tools | VS Code + Python documented | 1 | README / secure-dev checklist |
 | 2 | Libraries | `torch`, `torchvision`, `matplotlib` declared | 1 | `pyproject.toml` deps |
 | 2 | Install | Reproducible install of those libs (lock + `pip install -e .` / equiv.) | 1 | install verify |
@@ -30,17 +30,17 @@ Enterprise phases **2–5** (plus Phase 1 tool pinning) must satisfy every row. 
 | 3.4 | Step order | `zero_grad` → forward → loss → `backward` → `step` | 4 | `test_trainer_step_order_and_types` ✅ |
 | 3.4 | Loss print | Every 100 mini-batches; print epoch/batch/loss | 4 | smoke + `loss_history` ✅ |
 | 3.4 | Guide bug fix | **Must** accumulate `running_loss += loss.item()` before print (guide omits this) | 4 | `test_running_loss_accumulation` ✅ |
-| 3.5 | Eval mode | `torch.no_grad()`; use `torch.max(outputs, 1)` | 5 | eval test |
-| 3.5 | Coverage | Exactly 10,000 test images | 5 | count assert |
-| 3.5 | Metric | Report accuracy `%` on those 10,000 | 5 | metrics file |
-| 3.6 | Unnormalize | `img / 2 + 0.5` then HWC display | 5 | viz helper test |
-| 3.6 | Labels | Title with **Actual** and **Predicted** class names | 5 | gallery |
-| 3.6 | Count | **8** test images | 5 | gallery |
+| 3.5 | Eval mode | `torch.no_grad()`; use `torch.max(outputs, 1)` | 5 | `tests/integration/test_baseline_eval.py` ✅ |
+| 3.5 | Coverage | Exactly 10,000 test images | 5 | `test_baseline_eval_ten_thousand` ✅ |
+| 3.5 | Metric | Report accuracy `%` on those 10,000 | 5 | `baseline_metrics.json` ✅ |
+| 3.6 | Unnormalize | `img / 2 + 0.5` then HWC display | 5 | `test_unnormalize_guide_formula` ✅ |
+| 3.6 | Labels | Title with **Actual** and **Predicted** class names | 5 | `baseline_gallery.png` ✅ |
+| 3.6 | Count | **8** test images | 5 | `test_gallery_artifact` ✅ |
 | 3.6 | Classes | Official CIFAR-10 names (guide references `classes` undefined) | 2/5 | `CIFAR10_CLASSES` ✅ (Phase 2) |
-| 3.7 | Persist | `torch.save(state_dict, …)` | 5 | save/load test |
-| 3.7 | Path | Guide literal `cnn_model.pth`; repo path `models/cnn_model.pth` | 5 | both satisfied (see note) |
-| 4 | Why project matters for DS | Written note (healthcare/auto/retail + advanced CV path) | 5 | learning evidence |
-| 5 | Tough questions (20) | Answer all 20 from `guide_tough_questions_source.md` | 5 | `guide_questions.md` |
+| 3.7 | Persist | `torch.save(state_dict, …)` | 5 | `test_model_save_dual_paths_and_load` ✅ |
+| 3.7 | Path | Guide literal `cnn_model.pth`; repo path `models/cnn_model.pth` | 5 | dual-path save + equivalence test ✅ |
+| 4 | Why project matters for DS | Written note (healthcare/auto/retail + advanced CV path) | 5 | `learning_why_image_classification.md` §4 ✅ |
+| 5 | Tough questions (20) | Answer all 20 from `guide_tough_questions_source.md` | 5 | `guide_questions.md` ✅ |
 
 ## Path note for Step 7
 
