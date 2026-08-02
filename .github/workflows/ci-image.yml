@@ -97,7 +97,8 @@ jobs:
             ${{ env.LOCAL_TAG }}
             ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          provenance: true
+          # provenance/SBOM attestations produce manifest lists incompatible with --load.
+          provenance: ${{ github.event_name != 'pull_request' }}
           sbom: ${{ github.event_name != 'pull_request' }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
