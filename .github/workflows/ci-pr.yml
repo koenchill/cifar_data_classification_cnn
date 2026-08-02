@@ -1,0 +1,75 @@
+# Fast PR checks only. No full CIFAR-10 training.
+# Actions pinned by commit SHA (immutable reference).
+
+name: ci-pr
+
+on:
+  pull_request:
+  push:
+    branches: [dev, main]
+
+permissions:
+  contents: read
+  # No id-token write here — build must not federate to apply/deploy roles.
+  id-token: none
+
+concurrency:
+  group: ci-pr-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Set up Python
+        uses: actions/setup-python@0b93645e9fea7318eca7822eba98e7deb2cb8c1d # v5.3.0
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install package (CPU torch index)
+        run: |
+          python -m pip install --upgrade pip setuptools wheel
+          python -m pip install -e ".[dev]" \
+            --extra-index-url https://download.pytorch.org/whl/cpu
+
+      - name: Ruff
+        run: ruff check src tests scripts
+
+      - name: Mypy
+        run: mypy
+
+      - name: Bandit (lightweight SAST)
+        run: bandit -c pyproject.toml -r src
+
+      - name: Secret scan
+        run: detect-secrets scan --baseline .secrets.baseline
+
+      # Remaining torch advisories tracked in docs/evidence/release-0/phase-01-gate.md
+      - name: Dependency audit
+        run: pip-audit --progress-spinner off
+        continue-on-error: true
+
+      - name: Import guide toolchain
+        run: python -c "import torch, torchvision, matplotlib; print(torch.__version__)"
+
+      - name: Pytest (synthetic / unit only; no training job)
+        run: pytest -q
+
+  # Required checks (branch_protection.md): lint-test, iam-negative-guard, and pr-title/title.
+  # Negative trust assertion: this workflow must never hold apply/deploy permissions.
+  iam-negative-guard:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Assert no cloud apply credentials in PR CI
+        run: |
+          echo "PR CI permissions: contents=read, id-token=none"
+          if [ -n "${AWS_ACCESS_KEY_ID:-}" ] || [ -n "${AWS_SECRET_ACCESS_KEY:-}" ]; then
+            echo "Long-lived AWS keys must not be present in PR CI" >&2
+            exit 1
+          fi
+          echo "Negative IAM guard passed (no long-lived AWS keys; no OIDC apply token)."

@@ -1,0 +1,35 @@
+# Lightweight PR title lint — encourages conventional titles without blocking docs nuance.
+name: pr-title
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  title:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate PR title
+        uses: amannn/action-semantic-pull-request@0723387faaf9b38adef4775cd42cfd5155ed6017 # v5.5.3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          types: |
+            feat
+            fix
+            docs
+            ci
+            chore
+            security
+            refactor
+            test
+            perf
+          requireScope: false
+          # Imperative, concise; conventional commits style.
+          subjectPattern: ^[a-z].+
+          subjectPatternError: |
+            Use an imperative lowercase subject, e.g. "add CIFAR-10 data contract tests".
