@@ -1,0 +1,116 @@
+# Terraform fmt/validate/policy gates. Optional OIDC plan when AWS_ROLE_TO_ASSUME is set.
+# Never uses long-lived AWS access keys. Apply is out of band / protected environment only.
+# Actions pinned by commit SHA.
+
+name: terraform
+
+on:
+  pull_request:
+    paths:
+      - "infra/terraform/**"
+      - ".github/workflows/terraform.yml"
+      - "tests/terraform/**"
+  push:
+    branches: [dev, main]
+    paths:
+      - "infra/terraform/**"
+      - ".github/workflows/terraform.yml"
+      - "tests/terraform/**"
+  workflow_dispatch:
+
+concurrency:
+  group: terraform-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  fmt-validate-policy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      id-token: none
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd # v3.1.2
+        with:
+          terraform_version: "1.11.4"
+          terraform_wrapper: false
+
+      - name: Terraform fmt
+        run: terraform fmt -check -recursive infra/terraform
+
+      - name: Terraform init + validate (staging, no backend)
+        working-directory: infra/terraform/envs/staging
+        run: |
+          terraform init -backend=false
+          terraform validate
+
+      - name: Terraform init + validate (dev/prod, no backend)
+        run: |
+          for env in dev prod; do
+            terraform -chdir=infra/terraform/envs/$env init -backend=false
+            terraform -chdir=infra/terraform/envs/$env validate
+          done
+
+      - name: Bootstrap validate
+        working-directory: infra/terraform/bootstrap
+        run: |
+          terraform init -backend=false
+          terraform validate
+
+      - name: Set up Python
+        uses: actions/setup-python@8d9ed9ac5c53483de85588cdf95a591a75ab9f55 # v5.5.0
+        with:
+          python-version: "3.11"
+
+      - name: Install test deps
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install pytest==9.0.3 pyyaml==6.0.2
+
+      - name: Policy-as-code + IAM negative tests
+        run: pytest -q tests/terraform
+
+  oidc-plan-staging:
+    # Optional: only when repository variable AWS_ROLE_TO_ASSUME is configured.
+    if: ${{ vars.AWS_ROLE_TO_ASSUME != '' }}
+    needs: [fmt-validate-policy]
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      AWS_REGION: us-east-1
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@e3dd6a429d7300a6a4c196c26e071d42e0343502 # v4.0.2
+        with:
+          role-to-assume: ${{ vars.AWS_ROLE_TO_ASSUME }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd # v3.1.2
+        with:
+          terraform_version: "1.11.4"
+          terraform_wrapper: false
+
+      - name: Terraform plan staging
+        working-directory: infra/terraform/envs/staging
+        run: |
+          test -f backend.hcl || cp backend.hcl.example backend.hcl
+          terraform init -backend-config=backend.hcl
+          terraform plan -var-file=../../Data/staging.tfvars.json -out=tfplan
+          terraform show -no-color tfplan > "${GITHUB_WORKSPACE}/docs/evidence/release-d/phase-13-plan-staging.txt"
+
+      - name: Upload plan artifact
+        uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 # v4.6.0
+        with:
+          name: phase-13-staging-plan
+          path: docs/evidence/release-d/phase-13-plan-staging.txt

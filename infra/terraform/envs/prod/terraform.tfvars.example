@@ -1,0 +1,13 @@
+aws_region             = "us-east-1"
+project                = "cifar-cnn"
+environment            = "prod"
+vpc_cidr               = "10.42.0.0/16"
+single_nat_gateway     = false
+cluster_version        = "1.31"
+endpoint_public_access = false
+node_instance_types    = ["t3.medium"]
+node_desired_size      = 2
+github_org             = "koenchill"
+github_repo            = "cifar_data_classification_cnn"
+state_bucket_name      = "REPLACE-UNIQUE-cifar-cnn-tf-state"
+lock_table_name        = "cifar-cnn-terraform-locks"
