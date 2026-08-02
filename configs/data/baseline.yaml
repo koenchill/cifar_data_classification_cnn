@@ -1,0 +1,19 @@
+# Guide Step 1 baseline data contract — do not alter for Release A baseline path.
+dataset: CIFAR10
+root: ./data
+download: true
+batch_size: 32
+train_shuffle: true
+test_shuffle: false
+normalize:
+  mean: [0.5, 0.5, 0.5]
+  std: [0.5, 0.5, 0.5]
+transforms:
+  - ToTensor
+  - Normalize
+augmentation_on_eval: false
+# Additive stratified split from the 50k training pool only (official test locked).
+split:
+  seed: 42
+  val_fraction: 0.1
+  official_test_locked: true

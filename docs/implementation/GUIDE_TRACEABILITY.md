@@ -11,12 +11,12 @@ Enterprise phases **2–5** (plus Phase 1 tool pinning) must satisfy every row. 
 | 2 | Tools | VS Code + Python documented | 1 | README / secure-dev checklist |
 | 2 | Libraries | `torch`, `torchvision`, `matplotlib` declared | 1 | `pyproject.toml` deps |
 | 2 | Install | Reproducible install of those libs (lock + `pip install -e .` / equiv.) | 1 | install verify |
-| 3.1 | Transforms | `Compose([ToTensor(), Normalize((0.5,0.5,0.5),(0.5,0.5,0.5))])` | 2 | data-contract test |
-| 3.1 | Train set | `CIFAR10(root=./data, train=True, download=True, transform=…)` | 2 | loader test |
-| 3.1 | Test set | `CIFAR10(..., train=False, download=True, transform=…)` | 2 | loader test |
-| 3.1 | Train loader | `batch_size=32`, `shuffle=True` | 2 | config + test |
-| 3.1 | Test loader | `batch_size=32`, `shuffle=False` | 2 | config + test |
-| 3.1 | Sizes | 50,000 train / 10,000 test | 2 | assert lengths |
+| 3.1 | Transforms | `Compose([ToTensor(), Normalize((0.5,0.5,0.5),(0.5,0.5,0.5))])` | 2 | `tests/unit/test_data_contract.py` ✅ |
+| 3.1 | Train set | `CIFAR10(root=./data, train=True, download=True, transform=…)` | 2 | `loaders.py` + baseline.yaml ✅ |
+| 3.1 | Test set | `CIFAR10(..., train=False, download=True, transform=…)` | 2 | `loaders.py` + baseline.yaml ✅ |
+| 3.1 | Train loader | `batch_size=32`, `shuffle=True` | 2 | config + RandomSampler test ✅ |
+| 3.1 | Test loader | `batch_size=32`, `shuffle=False` | 2 | config + SequentialSampler test ✅ |
+| 3.1 | Sizes | 50,000 train / 10,000 test | 2 | fake + optional live size tests ✅ |
 | 3.2 | `conv1` | `Conv2d(3, 32, 3, padding=1)` | 3 | architecture test |
 | 3.2 | `pool` | `MaxPool2d(2, 2)` (shared) | 3 | architecture test |
 | 3.2 | `conv2` | `Conv2d(32, 64, 3, padding=1)` | 3 | architecture test |
@@ -36,7 +36,7 @@ Enterprise phases **2–5** (plus Phase 1 tool pinning) must satisfy every row. 
 | 3.6 | Unnormalize | `img / 2 + 0.5` then HWC display | 5 | viz helper test |
 | 3.6 | Labels | Title with **Actual** and **Predicted** class names | 5 | gallery |
 | 3.6 | Count | **8** test images | 5 | gallery |
-| 3.6 | Classes | Official CIFAR-10 names (guide references `classes` undefined) | 2/5 | `CIFAR10_CLASSES` |
+| 3.6 | Classes | Official CIFAR-10 names (guide references `classes` undefined) | 2/5 | `CIFAR10_CLASSES` ✅ (Phase 2) |
 | 3.7 | Persist | `torch.save(state_dict, …)` | 5 | save/load test |
 | 3.7 | Path | Guide literal `cnn_model.pth`; repo path `models/cnn_model.pth` | 5 | both satisfied (see note) |
 | 4 | Why project matters for DS | Written note (healthcare/auto/retail + advanced CV path) | 5 | learning evidence |
