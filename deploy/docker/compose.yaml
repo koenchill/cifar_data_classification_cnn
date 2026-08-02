@@ -1,0 +1,47 @@
+# Local hardened runtime envelope (not equivalent to EKS).
+# Deploy by digest in real environments — never mutable :latest alone.
+#
+#   docker compose -f deploy/docker/compose.yaml up --build
+
+name: cifar-cnn-api
+
+services:
+  api:
+    build:
+      context: ../..
+      dockerfile: deploy/docker/Dockerfile
+      # Requires Docker Buildx / Engine that honors ignorefile (Docker 23+).
+    image: cifar-cnn-api:local
+    ports:
+      - "8000:8000"
+    environment:
+      APP_ENV: development
+      # Dev/CI static OIDC only — production compose/EKS must use jwks.
+      CIFAR_CNN_OIDC_MODE: static
+      OIDC_ISSUER: https://cifar-cnn.local/test
+      OIDC_AUDIENCE: cifar-cnn-api
+      CIFAR_CNN_OIDC_HS256_SECRET: cifar-cnn-test-hs256-not-for-production
+      MODEL_BUNDLE_PATH: /app/models/bundles/simple_cnn-1.0.1
+      CIFAR_CNN_RATE_LIMIT_PER_MIN: "60"
+    read_only: true
+    tmpfs:
+      - /tmp:size=64m,mode=1777
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    user: "10001:10001"
+    mem_limit: 2g
+    cpus: "1.0"
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=3)",
+        ]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 45s

@@ -4,7 +4,7 @@
 |---|---|
 | Release | C |
 | Depends | Phase 11 |
-| Status | `todo` |
+| Status | `done` |
 | Evidence | `docs/evidence/release-c/phase-12-gate.md` |
 
 ## Objective
@@ -29,15 +29,15 @@ Build one hardened signed image and derive compute requirements from measurement
 
 ### Image hardening
 
-  - [ ] Multi-stage; pin base by digest; non-root; read-only root; drop caps; no-new-privileges
+  - [x] Multi-stage; pin base by digest; non-root; read-only root; drop caps; no-new-privileges
 
 ### Supply chain
 
-  - [ ] Lint; scan; SBOM; provenance; sign; deploy by digest; rebuild/vuln SLA
+  - [x] Lint; scan; SBOM; provenance; sign; deploy by digest; rebuild/vuln SLA
 
 ### Runtime + capacity
 
-  - [ ] Preload model; benchmark workers; measure latency/throughput/CPU/memory/startup/pull/errors
+  - [x] Preload model; benchmark workers; measure latency/throughput/CPU/memory/startup/pull/errors
 
 ## Deliverables
 
@@ -46,8 +46,8 @@ Build one hardened signed image and derive compute requirements from measurement
 
 ## Exit gate
 
-- [ ] Critical findings remediated or accepted; non-root/read-only verified
-- [ ] Signature/SBOM/provenance verify; approved requests/limits; Release C complete
+- [x] Critical findings remediated or accepted; non-root/read-only verified
+- [x] Signature/SBOM/provenance verify; approved requests/limits; Release C complete
 
 ## Verify
 
@@ -67,8 +67,8 @@ Do not start the next phase.
 
 ## Done when
 
-- [ ] All workstream tasks complete
-- [ ] Deliverables exist at listed paths
-- [ ] Exit gate criteria satisfied
-- [ ] Verify commands recorded/pass
-- [ ] No global stop condition triggered
+- [x] All workstream tasks complete
+- [x] Deliverables exist at listed paths
+- [x] Exit gate criteria satisfied
+- [x] Verify commands recorded/pass
+- [x] No global stop condition triggered
