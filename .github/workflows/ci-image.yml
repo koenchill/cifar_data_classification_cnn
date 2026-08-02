@@ -103,14 +103,19 @@ jobs:
           cache-to: type=gha,mode=max
 
       - name: Trivy image scan (CRITICAL gate)
-        uses: aquasecurity/trivy-action@6c175e9c4083a92bbca2f9724c8a5e33bc2d97a5 # v0.30.0
-        with:
-          image-ref: ${{ github.event_name == 'pull_request' && env.LOCAL_TAG || format('{0}:sha-{1}', env.IMAGE_NAME, github.sha) }}
-          format: table
-          exit-code: "1"
-          severity: CRITICAL
-          ignore-unfixed: true
-          trivyignores: deploy/docker/trivyignore
+        # Prefer dockerized Trivy over trivy-action composite deps (setup-trivy pin drift).
+        env:
+          SCAN_REF: ${{ github.event_name == 'pull_request' && env.LOCAL_TAG || format('{0}:sha-{1}', env.IMAGE_NAME, github.sha) }}
+        run: |
+          docker run --rm \
+            -v /var/run/docker.sock:/var/run/docker.sock \
+            -v "$PWD/deploy/docker/trivyignore:/.trivyignore:ro" \
+            aquasec/trivy:0.66.0 image \
+            --severity CRITICAL \
+            --ignore-unfixed \
+            --exit-code 1 \
+            --ignorefile /.trivyignore \
+            "$SCAN_REF"
 
       - name: Write digest evidence
         if: github.event_name != 'pull_request'
