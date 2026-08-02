@@ -12,7 +12,7 @@
 | 07 Improved CNN | `done` | Gate: docs/evidence/release-b/phase-07-gate.md |
 | 08 Rigorous evaluation | `done` | Gate: docs/evidence/release-b/phase-08-gate.md |
 | 09 Transfer / champion | `done` | Gate: docs/evidence/release-b/phase-09-gate.md |
-| 10 Model bundle (Release B) | `todo` | |
+| 10 Model bundle (Release B) | `done` | Gate: docs/evidence/release-b/phase-10-gate.md; Release B closed |
 | 11 Secure API | `todo` | |
 | 12 Docker envelope (Release C) | `todo` | |
 | 13 Terraform / EKS | `todo` | |

@@ -1,0 +1,15 @@
+{
+  "max_abs_diff": 8.940696716308594e-08,
+  "mean_abs_diff": 3.6805868148803714e-08,
+  "passed": true,
+  "tolerance": 0.0001,
+  "batch_sizes": [
+    1,
+    4
+  ],
+  "notes": [
+    "opset documented as 17",
+    "input=input output=logits",
+    "dynamic batch axis enabled on export"
+  ]
+}

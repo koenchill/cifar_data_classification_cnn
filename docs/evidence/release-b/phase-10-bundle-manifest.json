@@ -1,0 +1,34 @@
+{
+  "manifest": {
+    "bundle_dir": "simple_cnn-1.0.1",
+    "files": [
+      {
+        "path": "bom.json",
+        "sha256": "01cb258307dbce127fbfd80b6fc87c2118be4067c946e80fe5ca45750aa8b831",
+        "bytes": 674
+      },
+      {
+        "path": "classes.json",
+        "sha256": "decbd374b7f99dc64d12da708e91ffcc298c4fbf6e900cc13fbc0ec2e79e68e0",
+        "bytes": 166
+      },
+      {
+        "path": "metadata.json",
+        "sha256": "b1bae026140c3d4f6d04334beb1d6378dbea63d70ed4cadb04bf254af1f9d7d2",
+        "bytes": 1608
+      },
+      {
+        "path": "model.onnx",
+        "sha256": "68a092d51a4c9e848bb9c6b9c109dbcfe1d5c23757b4eef4d5d9c227a696fd22",
+        "bytes": 492340
+      },
+      {
+        "path": "model.pt",
+        "sha256": "138aaa3128977f30018d6cee60d64e4e6055f8302bc0a7ec1e9bcb9dca845071",
+        "bytes": 493733
+      }
+    ],
+    "algorithm": "sha256",
+    "signature_alg": "HMAC-SHA256"
+  }
+}
