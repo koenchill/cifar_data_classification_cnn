@@ -4,7 +4,7 @@
 |---|---|
 | Release | B |
 | Depends | Phases 6-7 |
-| Status | `todo` |
+| Status | `done` |
 | Evidence | `docs/evidence/release-b/phase-08-gate.md` |
 
 ## Objective
@@ -30,19 +30,19 @@ Expand AI RMF Measure evidence beyond headline accuracy.
 
 ### Metrics
 
-  - [ ] Accuracy/loss; macro/weighted/per-class P/R/F1; confusion; ROC/AUC; calibration as selected
+  - [x] Accuracy/loss; macro/weighted/per-class P/R/F1; confusion; ROC/AUC; calibration as selected
 
 ### Robustness
 
-  - [ ] Corrupted/blur/noise/wrong-size/wrong-mode/malformed/OOD/high-confidence unfamiliar inputs
+  - [x] Corrupted/blur/noise/wrong-size/wrong-mode/malformed/OOD/high-confidence unfamiliar inputs
 
 ### Explainability
 
-  - [ ] Grad-CAM for representative correct/incorrect cases with limitations
+  - [x] Grad-CAM for representative correct/incorrect cases with limitations
 
 ### Safety behavior
 
-  - [ ] Define when API returns low-confidence/uncertain flags
+  - [x] Define when API returns low-confidence/uncertain flags
 
 ## Deliverables
 
@@ -51,8 +51,8 @@ Expand AI RMF Measure evidence beyond headline accuracy.
 
 ## Exit gate
 
-- [ ] Metric fixture tests pass; test set unused for tuning
-- [ ] Critical robustness failures owned/treated or residual-risk accepted
+- [x] Metric fixture tests pass; test set unused for tuning
+- [x] Critical robustness failures owned/treated or residual-risk accepted
 
 ## Verify
 
@@ -72,8 +72,8 @@ Do not start the next phase.
 
 ## Done when
 
-- [ ] All workstream tasks complete
-- [ ] Deliverables exist at listed paths
-- [ ] Exit gate criteria satisfied
-- [ ] Verify commands recorded/pass
-- [ ] No global stop condition triggered
+- [x] All workstream tasks complete
+- [x] Deliverables exist at listed paths
+- [x] Exit gate criteria satisfied
+- [x] Verify commands recorded/pass
+- [x] No global stop condition triggered
