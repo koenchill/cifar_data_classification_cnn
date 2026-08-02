@@ -3,29 +3,29 @@
     "bundle_dir": "simple_cnn-1.0.1",
     "files": [
       {
+        "path": "bom.json",
+        "sha256": "f4847299cdacfc032e067690e6f1e9e45b1278a0e7689c0b8962fdbb8bfd7ce9",
+        "bytes": 674
+      },
+      {
         "path": "classes.json",
         "sha256": "decbd374b7f99dc64d12da708e91ffcc298c4fbf6e900cc13fbc0ec2e79e68e0",
         "bytes": 166
       },
       {
         "path": "metadata.json",
-        "sha256": "4298ae3a749996dcfee103de822978dbb09548f3a8a78533abcc12d73f766087",
-        "bytes": 1609
+        "sha256": "df849baed07fb9e89e1a9da0608c499dbd7420b53ffb447e959eb6d062172103",
+        "bytes": 1608
       },
       {
         "path": "model.onnx",
-        "sha256": "8dd052586d4ea75eaaa4bd9e9f9838c70ae08ba42f6e4983465b970de2954fa0",
+        "sha256": "6b03184a1c54f99460e83f676f811d2afa10b4d70bf30b267155950149069e11",
         "bytes": 492340
       },
       {
         "path": "model.pt",
-        "sha256": "b6557294798b516dddd13e307875708c7c02a673d668c9dd37dfb68cad85f342",
+        "sha256": "de342191d78fbff42e465a3c82f0d7c997fe5d3aef7d6735d0beabebb1837d55",
         "bytes": 493733
-      },
-      {
-        "path": "sbom.json",
-        "sha256": "36c4295100a6167ba14a7da05a40e5ddfff63ce76559bd6c05228da930e13e71",
-        "bytes": 674
       }
     ],
     "algorithm": "sha256",

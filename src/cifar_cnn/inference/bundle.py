@@ -226,15 +226,17 @@ def pack_bundle(
         json.dumps({"classes": list(CIFAR10_CLASSES)}, indent=2) + "\n",
         encoding="utf-8",
     )
-    write_sbom_stub(root / "sbom.json", model_name=model_name, version=version)
+    # Named bom.json (not sbom*.json) so repo .gitignore does not drop it.
+    write_sbom_stub(root / "bom.json", model_name=model_name, version=version)
 
     payload_files = [
         "model.pt",
         "model.onnx",
         "metadata.json",
         "classes.json",
-        "sbom.json",
+        "bom.json",
     ]
+
     envelope = {"manifest": build_manifest(root, files=payload_files)}
     (root / "manifest.json").write_text(
         json.dumps(envelope, indent=2) + "\n", encoding="utf-8"

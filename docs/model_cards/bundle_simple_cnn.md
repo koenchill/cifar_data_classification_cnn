@@ -12,7 +12,8 @@
 
 - `metadata.json` — class order, normalization, constraints, limitations, identities  
 - `classes.json` — official CIFAR-10 names  
-- `sbom.json` — CycloneDX-like stub  
+- `bom.json` — CycloneDX-like stub  
+
 - `manifest.json` / `manifest.sig` — hashed inventory + signature  
 
 ## Serving constraints
