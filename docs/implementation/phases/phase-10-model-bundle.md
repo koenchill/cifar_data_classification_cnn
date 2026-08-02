@@ -4,7 +4,7 @@
 |---|---|
 | Release | B |
 | Depends | Phase 9 |
-| Status | `todo` |
+| Status | `done` |
 | Evidence | `docs/evidence/release-b/phase-10-gate.md` |
 
 ## Objective
@@ -31,19 +31,19 @@ Produce a portable, self-describing, integrity-protected release candidate.
 
 ### Export
 
-  - [ ] ONNX with documented opset/names/dynamic batch; PyTorch parity
+  - [x] ONNX with documented opset/names/dynamic batch; PyTorch parity
 
 ### Bundle
 
-  - [ ] Model, metadata, class order, normalization, constraints, metrics, limitations, identities
+  - [x] Model, metadata, class order, normalization, constraints, metrics, limitations, identities
 
 ### Integrity
 
-  - [ ] Hash/sign bundle; tamper + rollback tests
+  - [x] Hash/sign bundle; tamper + rollback tests
 
 ### AI RMF gate
 
-  - [ ] Review Govern/Map/Measure; assign Manage actions, monitors, thresholds, rollback, retirement
+  - [x] Review Govern/Map/Measure; assign Manage actions, monitors, thresholds, rollback, retirement
 
 ## Deliverables
 
@@ -52,8 +52,8 @@ Produce a portable, self-describing, integrity-protected release candidate.
 
 ## Exit gate
 
-- [ ] Load/dynamic-batch/parity/metadata/signature/tamper/rollback tests pass
-- [ ] High unresolved AI risks block promotion; Release B complete
+- [x] Load/dynamic-batch/parity/metadata/signature/tamper/rollback tests pass
+- [x] High unresolved AI risks block promotion; Release B complete
 
 ## Verify
 
@@ -73,8 +73,8 @@ Do not start the next phase.
 
 ## Done when
 
-- [ ] All workstream tasks complete
-- [ ] Deliverables exist at listed paths
-- [ ] Exit gate criteria satisfied
-- [ ] Verify commands recorded/pass
-- [ ] No global stop condition triggered
+- [x] All workstream tasks complete
+- [x] Deliverables exist at listed paths
+- [x] Exit gate criteria satisfied
+- [x] Verify commands recorded/pass
+- [x] No global stop condition triggered

@@ -63,3 +63,5 @@ typing_extensions==4.16.0
 urllib3==2.7.0
 virtualenv==21.7.1
 webencodings==0.5.1
+onnx==1.17.0
+onnxruntime==1.22.0
