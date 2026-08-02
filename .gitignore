@@ -26,6 +26,8 @@ data/raw/*
 !data/raw/.gitkeep
 data/processed/*
 !data/processed/.gitkeep
+data/cifar-10-*
+data/*.tar.gz
 artifacts/*
 !artifacts/.gitkeep
 models/*.pth
