@@ -13,7 +13,7 @@
 | 08 Rigorous evaluation | `done` | Gate: docs/evidence/release-b/phase-08-gate.md |
 | 09 Transfer / champion | `done` | Gate: docs/evidence/release-b/phase-09-gate.md |
 | 10 Model bundle (Release B) | `done` | Gate: docs/evidence/release-b/phase-10-gate.md; Release B closed |
-| 11 Secure API | `todo` | |
+| 11 Secure API | `done` | Gate: docs/evidence/release-c/phase-11-gate.md |
 | 12 Docker envelope (Release C) | `todo` | |
 | 13 Terraform / EKS | `todo` | |
 | 14 K8s runtime | `todo` | |
