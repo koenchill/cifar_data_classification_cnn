@@ -80,5 +80,5 @@ Baseline ML must match the course guide exactly. Traceability matrix:
 ## Status
 
 - Branch: `dev`
-- Current execution target: **Phase 2** (data contract) — Phases 0–1 complete
+- Current execution target: **Phase 3** (SimpleCNN) — Phases 0–2 complete
 - Claims policy: document as *mapped to selected NIST AI RMF outcomes* — never “NIST certified”
