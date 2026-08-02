@@ -4,7 +4,7 @@
 |---|---|
 | Release | B |
 | Depends | Phase 8 |
-| Status | `todo` |
+| Status | `done` |
 | Evidence | `docs/evidence/release-b/phase-09-gate.md` |
 
 ## Objective
@@ -30,15 +30,15 @@ Compare ResNet18 with SimpleCNN variants under a predeclared selection rule.
 
 ### Transfer path
 
-  - [ ] Document weights, preprocessing, classifier replacement, freeze/finetune, license, provenance
+  - [x] Document weights, preprocessing, classifier replacement, freeze/finetune, license, provenance
 
 ### Comparison
 
-  - [ ] Val macro-F1/acc, robustness, calibration, latency, size, memory, cost, interpretability, security/ops
+  - [x] Val macro-F1/acc, robustness, calibration, latency, size, memory, cost, interpretability, security/ops
 
 ### Selection
 
-  - [ ] Freeze candidate before official-test evaluation; model-owner and AI-risk review
+  - [x] Freeze candidate before official-test evaluation; model-owner and AI-risk review
 
 ## Deliverables
 
@@ -47,8 +47,8 @@ Compare ResNet18 with SimpleCNN variants under a predeclared selection rule.
 
 ## Exit gate
 
-- [ ] Selection follows declared criteria without test leakage
-- [ ] Champion footprint fits envelope or capacity revised
+- [x] Selection follows declared criteria without test leakage
+- [x] Champion footprint fits envelope or capacity revised
 
 ## Verify
 
@@ -68,8 +68,8 @@ Do not start the next phase.
 
 ## Done when
 
-- [ ] All workstream tasks complete
-- [ ] Deliverables exist at listed paths
-- [ ] Exit gate criteria satisfied
-- [ ] Verify commands recorded/pass
-- [ ] No global stop condition triggered
+- [x] All workstream tasks complete
+- [x] Deliverables exist at listed paths
+- [x] Exit gate criteria satisfied
+- [x] Verify commands recorded/pass
+- [x] No global stop condition triggered
