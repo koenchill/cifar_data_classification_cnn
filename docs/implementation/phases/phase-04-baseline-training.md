@@ -4,7 +4,7 @@
 |---|---|
 | Release | A |
 | Depends | Phase 3 |
-| Status | `todo` |
+| Status | `done` |
 | Evidence | `docs/evidence/release-a/phase-04-gate.md` |
 | Guide steps | §3 Steps 3–4 |
 
@@ -33,26 +33,26 @@ Train with the guide’s `CrossEntropyLoss`, `Adam(lr=0.001)`, 10 epochs, and **
 
 ### Loss and optimizer (Step 3) — exact
 
-  - [ ] `criterion = nn.CrossEntropyLoss()`
-  - [ ] `optimizer = optim.Adam(net.parameters(), lr=0.001)`
+  - [x] `criterion = nn.CrossEntropyLoss()`
+  - [x] `optimizer = optim.Adam(net.parameters(), lr=0.001)`
 
 ### Training loop (Step 4) — exact + bugfix
 
-  - [ ] `for epoch in range(10):`
-  - [ ] Per batch: unpack `(inputs, labels)` → `optimizer.zero_grad()` → `outputs = net(inputs)` → `loss = criterion(outputs, labels)` → `loss.backward()` → `optimizer.step()`
-  - [ ] **Guide bug fix:** `running_loss += loss.item()` every batch
-  - [ ] When `i % 100 == 99`: print epoch/batch/avg loss (`running_loss / 100`), then reset `running_loss = 0.0`
-  - [ ] Document the guide defect in evidence (missing accumulation in snippet)
-  - [ ] Prefer `net.train()` during training (additive; guide-implied)
+  - [x] `for epoch in range(10):`
+  - [x] Per batch: unpack `(inputs, labels)` → `optimizer.zero_grad()` → `outputs = net(inputs)` → `loss = criterion(outputs, labels)` → `loss.backward()` → `optimizer.step()`
+  - [x] **Guide bug fix:** `running_loss += loss.item()` every batch
+  - [x] When `i % 100 == 99`: print epoch/batch/avg loss (`running_loss / 100`), then reset `running_loss = 0.0`
+  - [x] Document the guide defect in evidence (missing accumulation in snippet)
+  - [x] Prefer `net.train()` during training (additive; guide-implied)
 
 ### Reproducibility (additive)
 
-  - [ ] Capture config, seed, env, code version, dataset/split IDs, device, timings, hashes
-  - [ ] Default device CPU (guide); optional GPU profile recorded separately
+  - [x] Capture config, seed, env, code version, dataset/split IDs, device, timings, hashes
+  - [x] Default device CPU (guide); optional GPU profile recorded separately
 
 ### Compute
 
-  - [ ] CPU training benchmark; optional single GPU profile
+  - [x] CPU training benchmark; optional single GPU profile
 
 ## Deliverables
 
@@ -65,10 +65,10 @@ Train with the guide’s `CrossEntropyLoss`, `Adam(lr=0.001)`, 10 epochs, and **
 
 ## Exit gate
 
-- [ ] Unit optimizer-step test matches guide step order
-- [ ] Corrected running-loss accumulation verified
-- [ ] Ten-epoch run reproducible from its record (or smoke + documented full-run plan if compute-limited)
-- [ ] Resource use does not exhaust selected environment
+- [x] Unit optimizer-step test matches guide step order
+- [x] Corrected running-loss accumulation verified
+- [x] Ten-epoch run reproducible from its record (or smoke + documented full-run plan if compute-limited)
+- [x] Resource use does not exhaust selected environment
 
 ## Verify
 
@@ -89,8 +89,8 @@ Do not start the next phase.
 
 ## Done when
 
-- [ ] All workstream tasks complete
-- [ ] Deliverables exist at listed paths
-- [ ] Exit gate criteria satisfied
-- [ ] Verify commands recorded/pass
-- [ ] No global stop condition triggered
+- [x] All workstream tasks complete
+- [x] Deliverables exist at listed paths
+- [x] Exit gate criteria satisfied
+- [x] Verify commands recorded/pass
+- [x] No global stop condition triggered

@@ -1,0 +1,42 @@
+{
+  "config": {
+    "epochs": 1,
+    "lr": 0.001,
+    "batch_size": 32,
+    "seed": 42,
+    "device": "cpu",
+    "log_every_n_batches": 1,
+    "smoke_max_batches": 3,
+    "artifact_dir": "artifacts/baseline_smoke"
+  },
+  "device": "cpu",
+  "elapsed_sec": 0.05127970001194626,
+  "epoch_times_sec": [
+    0.05127380002522841
+  ],
+  "loss_history": [
+    {
+      "epoch": 1.0,
+      "batch": 1.0,
+      "loss": 2.30189847946167
+    },
+    {
+      "epoch": 1.0,
+      "batch": 2.0,
+      "loss": 2.3084943294525146
+    }
+  ],
+  "final_checkpoint": "artifacts\\baseline_smoke\\checkpoint_last.pth",
+  "environment": {
+    "python": "3.11.9",
+    "platform": "Windows-10-10.0.26200-SP0",
+    "torch": "2.7.1+cpu"
+  },
+  "guide_defect_note": "Student guide Step 4 prints running_loss/100 but never accumulates loss.item(); this trainer adds running_loss += loss.item() each batch.",
+  "model": "SimpleCNN",
+  "data": {
+    "dataset": "TensorDataset",
+    "split": "synthetic-smoke"
+  },
+  "config_file": "configs\\train\\baseline.yaml"
+}
