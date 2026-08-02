@@ -1,0 +1,37 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: cifar-cnn-require-image-digest
+  annotations:
+    policies.kyverno.io/title: Require digest-pinned images for CIFAR-CNN
+    policies.kyverno.io/category: Supply Chain
+    policies.kyverno.io/severity: high
+spec:
+  validationFailureAction: Enforce
+  background: true
+  rules:
+    - name: deny-mutable-tags
+      match:
+        any:
+          - resources:
+              kinds:
+                - Pod
+              namespaces:
+                - cifar-cnn
+      exclude:
+        any:
+          - resources:
+              namespaces:
+                - kube-system
+      validate:
+        message: >-
+          CIFAR-CNN workloads must use digest-pinned images
+          (image@sha256:...), not mutable tags such as :latest.
+        pattern:
+          spec:
+            containers:
+              - image: "*@sha256:*"
+            =(initContainers):
+              - image: "*@sha256:*"
+            =(ephemeralContainers):
+              - image: "*@sha256:*"

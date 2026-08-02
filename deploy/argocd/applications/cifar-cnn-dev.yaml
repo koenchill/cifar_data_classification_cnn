@@ -1,0 +1,35 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cifar-cnn-dev
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  annotations:
+    cifar-cnn.io/env: dev
+    notifications.argoproj.io/subscribe.on-sync-failed.slack: cifar-cnn-alerts
+spec:
+  project: cifar-cnn
+  source:
+    repoURL: https://github.com/koenchill/cifar_data_classification_cnn.git
+    targetRevision: dev
+    path: deploy/kustomize/overlays/dev
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: cifar-cnn
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: false
+    syncOptions:
+      - CreateNamespace=false
+      - PrunePropagationPolicy=foreground
+      - ApplyOutOfSyncOnly=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+  ignoreDifferences: []

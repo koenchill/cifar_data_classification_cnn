@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-rbac-cm
+  namespace: argocd
+  labels:
+    app.kubernetes.io/name: argocd-rbac-cm
+    app.kubernetes.io/part-of: argocd
+data:
+  policy.default: role:readonly
+  policy.csv: |
+    # Global deny of pod exec / resource override for all non-admin identities.
+    p, role:readonly, applications, get, */*, allow
+    p, role:readonly, applications, sync, */*, deny
+    p, role:readonly, applications, override, */*, deny
+    p, role:readonly, applications, delete, */*, deny
+    p, role:readonly, applications, action/*, */*, deny
+    p, role:readonly, exec, create, */*, deny
+
+    g, cifar-cnn:viewers, role:readonly
+    g, cifar-cnn:staging-operators, proj:cifar-cnn:staging-operator
+    g, cifar-cnn:prod-approvers, proj:cifar-cnn:prod-approver
+
+    # CI may read sync status only — never apply or exec.
+    g, ci-readonly, role:readonly
+  scopes: "[groups]"
