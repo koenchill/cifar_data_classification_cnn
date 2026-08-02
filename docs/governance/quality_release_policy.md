@@ -20,7 +20,8 @@ These are mandatory for production application release (Release C+), not backlog
 | Model promotion (B) | Predeclared champion rule; no test leakage; bundle hash/sign; AI risks owned |
 | App release (C) | OIDC/RBAC/rate/audit suites green; critical vulns remediated or accepted |
 | Platform (D) | Terraform/policy gates; network positive/negative; Argo promotion trace |
-| Production (E) | ORR signed; rollback proven; residual risks accepted by named authority |
+| Verification (E-16) | Consolidated suites green; requirements-to-test matrix; defect register; QA sign-off (`docs/evidence/release-e/`) |
+| Production (E-17) | ORR signed; rollback proven; residual risks accepted by named authority |
 
 ## SLO candidates (to approve in Phase 17)
 

@@ -1,0 +1,24 @@
+{
+  "phase": 16,
+  "release": "E",
+  "started_utc": "2026-08-02T03:55:58.884904+00:00",
+  "ended_utc": "2026-08-02T03:56:17.202608+00:00",
+  "command": [
+    "C:\\cifar_data_classification_cnn\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "-q",
+    "--ignore=tests/release",
+    "--junitxml=C:\\cifar_data_classification_cnn\\docs\\evidence\\release-e\\verification_junit.xml"
+  ],
+  "exit_code": 0,
+  "summary_line": "110 passed, 39 warnings in 13.54s",
+  "junit_xml": "docs/evidence/release-e/verification_junit.xml",
+  "stdout_tail": ".venv\\Lib\\site-packages\\matplotlib\\_fontconfig_pattern.py:89\n  C:\\cifar_data_classification_cnn\\.venv\\Lib\\site-packages\\matplotlib\\_fontconfig_pattern.py:89: PyparsingDeprecationWarning: 'resetCache' deprecated - use 'reset_cache'\n    parser.resetCache()\n\n.venv\\Lib\\site-packages\\matplotlib\\_mathtext.py:45\n  C:\\cifar_data_classification_cnn\\.venv\\Lib\\site-packages\\matplotlib\\_mathtext.py:45: PyparsingDeprecationWarning: 'enablePackrat' deprecated - use 'enable_packrat'\n    ParserElement.enablePackrat()\n\ntests/contract/test_api_contract.py: 3 warnings\ntests/e2e/test_predict_smoke.py: 1 warning\ntests/security/test_audit_redaction.py: 3 warnings\ntests/security/test_input_limits.py: 5 warnings\ntests/security/test_oidc_rbac.py: 7 warnings\ntests/unit/test_bundle_tamper.py: 4 warnings\ntests/unit/test_onnx_parity.py: 2 warnings\n  C:\\cifar_data_classification_cnn\\.venv\\Lib\\site-packages\\torch\\onnx\\utils.py:185: DeprecationWarning: The feature will be removed. Please remove usage of this function\n    setup_onnx_logging(verbose) as log_ctx,\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n110 passed, 39 warnings in 13.54s",
+  "stderr_tail": "",
+  "pass_criteria": {
+    "pytest_exit_zero": true,
+    "no_critical_open_defects": true,
+    "flaky_gates_unexplained": false
+  }
+}

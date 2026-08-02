@@ -4,7 +4,7 @@
 |---|---|
 | Release | E |
 | Depends | Phases 2-15 (tests built continuously; consolidated here) |
-| Status | `todo` |
+| Status | `done` |
 | Evidence | `docs/evidence/release-e/phase-16-gate.md` |
 
 ## Objective
@@ -27,8 +27,8 @@ Execute the complete test strategy and attach evidence to the release candidate.
 
 ### Test pyramid + ML + security + perf + resilience + review
 
-  - [ ] Run consolidated suites across code/AI/API/container/infra/K8s/GitOps
-  - [ ] Independent threat-model, pen test, AI review, game day, stakeholder acceptance
+  - [x] Run consolidated suites across code/AI/API/container/infra/K8s/GitOps
+  - [x] Independent threat-model, pen test, AI review, game day, stakeholder acceptance
 
 ## Deliverables
 
@@ -37,8 +37,8 @@ Execute the complete test strategy and attach evidence to the release candidate.
 
 ## Exit gate
 
-- [ ] Critical/high defects resolved or formally accepted with compensating controls + expiry
-- [ ] Quality/SLO/security thresholds pass; evidence attached to RC
+- [x] Critical/high defects resolved or formally accepted with compensating controls + expiry
+- [x] Quality/SLO/security thresholds pass; evidence attached to RC
 
 ## Verify
 
@@ -58,8 +58,8 @@ Do not start the next phase.
 
 ## Done when
 
-- [ ] All workstream tasks complete
-- [ ] Deliverables exist at listed paths
-- [ ] Exit gate criteria satisfied
-- [ ] Verify commands recorded/pass
-- [ ] No global stop condition triggered
+- [x] All workstream tasks complete
+- [x] Deliverables exist at listed paths
+- [x] Exit gate criteria satisfied
+- [x] Verify commands recorded/pass
+- [x] No global stop condition triggered
