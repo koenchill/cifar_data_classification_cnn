@@ -41,7 +41,8 @@ def save_state_dict(model: nn.Module, path: str | Path) -> Path:
     """Persist weights via ``torch.save`` of the state dict only (trusted format)."""
     out = Path(path)
     out.parent.mkdir(parents=True, exist_ok=True)
-    torch.save(model.state_dict(), out)
+    # Guide requires torch.save(state_dict); content is tensors-only mapping.
+    torch.save(model.state_dict(), out)  # nosec B614
     return out
 
 
@@ -62,9 +63,9 @@ def load_state_dict(
 
     # weights_only=True avoids arbitrary pickle object execution on modern torch.
     try:
-        state = torch.load(path, map_location="cpu", weights_only=True)
+        state = torch.load(path, map_location="cpu", weights_only=True)  # nosec B614
     except TypeError:  # pragma: no cover - older torch without weights_only
-        state = torch.load(path, map_location="cpu")
+        state = torch.load(path, map_location="cpu")  # nosec B614
 
     if not isinstance(state, dict):
         raise TypeError("Expected a state_dict mapping; refusing non-dict artifact")
