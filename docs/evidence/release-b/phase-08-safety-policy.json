@@ -1,0 +1,15 @@
+{
+  "policy": {
+    "low_confidence_threshold": 0.55,
+    "uncertain_margin": 0.08
+  },
+  "api_behavior": {
+    "accept": "Return top-1 class with confidence; include disclaimer fields",
+    "low_confidence": "Return prediction with low_confidence=true flag",
+    "uncertain": "Return prediction with uncertain=true (ambiguous top-2)"
+  },
+  "non_claims": [
+    "Softmax confidence is not proof of correctness",
+    "Policy does not certify adversarial or OOD robustness"
+  ]
+}
