@@ -42,8 +42,14 @@ def _by_kind(docs: list[dict[str, Any]], kind: str) -> list[dict[str, Any]]:
     return [d for d in docs if d.get("kind") == kind]
 
 
+def _cm(docs: list[dict[str, Any]], name: str) -> dict[str, Any]:
+    return next(d for d in _by_kind(docs, "ConfigMap") if d["metadata"]["name"] == name)
+
+
 def test_appproject_denies_exec_override_delete(argocd_docs: list[dict[str, Any]]) -> None:
-    project = next(d for d in _by_kind(argocd_docs, "AppProject") if d["metadata"]["name"] == "cifar-cnn")
+    project = next(
+        d for d in _by_kind(argocd_docs, "AppProject") if d["metadata"]["name"] == "cifar-cnn"
+    )
     assert project["spec"]["sourceRepos"] == [
         "https://github.com/koenchill/cifar_data_classification_cnn.git"
     ]
@@ -59,7 +65,7 @@ def test_appproject_denies_exec_override_delete(argocd_docs: list[dict[str, Any]
 def test_applications_prune_self_heal_and_isolation(argocd_docs: list[dict[str, Any]]) -> None:
     apps = {a["metadata"]["name"]: a for a in _by_kind(argocd_docs, "Application")}
     assert set(apps) >= {"cifar-cnn-dev", "cifar-cnn-staging", "cifar-cnn-prod"}
-    for name, app in apps.items():
+    for app in apps.values():
         assert app["spec"]["project"] == "cifar-cnn"
         assert app["spec"]["source"]["path"].startswith("deploy/kustomize/overlays/")
         auto = app["spec"]["syncPolicy"]["automated"]
@@ -71,7 +77,7 @@ def test_applications_prune_self_heal_and_isolation(argocd_docs: list[dict[str, 
 
 
 def test_rbac_denies_exec_globally(argocd_docs: list[dict[str, Any]]) -> None:
-    cm = next(d for d in _by_kind(argocd_docs, "ConfigMap") if d["metadata"]["name"] == "argocd-rbac-cm")
+    cm = _cm(argocd_docs, "argocd-rbac-cm")
     csv = cm["data"]["policy.csv"]
     assert "exec, create, */*, deny" in csv
     assert "applications, override, */*, deny" in csv
@@ -79,7 +85,7 @@ def test_rbac_denies_exec_globally(argocd_docs: list[dict[str, Any]]) -> None:
 
 
 def test_oidc_sso_configured_without_embedded_secrets(argocd_docs: list[dict[str, Any]]) -> None:
-    cm = next(d for d in _by_kind(argocd_docs, "ConfigMap") if d["metadata"]["name"] == "argocd-cm")
+    cm = _cm(argocd_docs, "argocd-cm")
     assert "oidc.config" in cm["data"]
     assert "$oidc.clientSecret" in cm["data"]["oidc.config"]
     blob = yaml.dump(cm)
