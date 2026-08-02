@@ -17,13 +17,13 @@ Enterprise phases **2–5** (plus Phase 1 tool pinning) must satisfy every row. 
 | 3.1 | Train loader | `batch_size=32`, `shuffle=True` | 2 | config + RandomSampler test ✅ |
 | 3.1 | Test loader | `batch_size=32`, `shuffle=False` | 2 | config + SequentialSampler test ✅ |
 | 3.1 | Sizes | 50,000 train / 10,000 test | 2 | fake + optional live size tests ✅ |
-| 3.2 | `conv1` | `Conv2d(3, 32, 3, padding=1)` | 3 | architecture test |
-| 3.2 | `pool` | `MaxPool2d(2, 2)` (shared) | 3 | architecture test |
-| 3.2 | `conv2` | `Conv2d(32, 64, 3, padding=1)` | 3 | architecture test |
-| 3.2 | `conv3` | `Conv2d(64, 64, 3, padding=1)` | 3 | architecture test |
-| 3.2 | `fc1` | `Linear(64*4*4, 64)` i.e. `Linear(1024, 64)` | 3 | architecture test |
-| 3.2 | `fc2` | `Linear(64, 10)` | 3 | architecture test |
-| 3.2 | Forward | `pool(relu(conv1))` ×3 → `view(-1, 64*4*4)` → `relu(fc1)` → `fc2` (logits) | 3 | forward test |
+| 3.2 | `conv1` | `Conv2d(3, 32, 3, padding=1)` | 3 | `test_simple_cnn.py` ✅ |
+| 3.2 | `pool` | `MaxPool2d(2, 2)` (shared) | 3 | `test_simple_cnn.py` ✅ |
+| 3.2 | `conv2` | `Conv2d(32, 64, 3, padding=1)` | 3 | `test_simple_cnn.py` ✅ |
+| 3.2 | `conv3` | `Conv2d(64, 64, 3, padding=1)` | 3 | `test_simple_cnn.py` ✅ |
+| 3.2 | `fc1` | `Linear(64*4*4, 64)` i.e. `Linear(1024, 64)` | 3 | `test_simple_cnn.py` ✅ |
+| 3.2 | `fc2` | `Linear(64, 10)` | 3 | `test_simple_cnn.py` ✅ |
+| 3.2 | Forward | `pool(relu(conv1))` ×3 → `view(-1, 64*4*4)` → `relu(fc1)` → `fc2` (logits) | 3 | forward/shape tests ✅ |
 | 3.3 | Loss | `nn.CrossEntropyLoss()` | 4 | trainer test |
 | 3.3 | Optimizer | `optim.Adam(params, lr=0.001)` | 4 | trainer test |
 | 3.4 | Epochs | `10` | 4 | baseline config |
