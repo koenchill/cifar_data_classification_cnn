@@ -19,3 +19,6 @@ Maps mandatory enterprise controls to evidence. Not a certification claim.
 | SLOs + alerts | slo_policy | PrometheusRule + ConfigMap | alert-response runbook |
 | Incident / vuln / continuity | ORR runbooks | docs/runbooks/* | alert_restore_tabletop |
 | Residual risk acceptance | risk_register | signed acceptances | `risk_acceptance_release_e.md` |
+| SAST (Bandit + Semgrep) | appsec_scanning | `ci-security` sast job | workflow artifacts |
+| SCA (pip-audit + Trivy fs + OSV) | appsec_scanning | allowlist + CRITICAL gate | `security/sca-allowlist.txt` |
+| DAST (OWASP ZAP baseline) | appsec_scanning | ephemeral API target | `ci-security` dast job |

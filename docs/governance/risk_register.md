@@ -42,6 +42,7 @@
 | CYB-05 | Over-broad IAM / public exposure | 2 | 5 | 10 | Policy-as-code; negative tests | Platform/Sec | Rel D | Low | — | — |
 | CYB-06 | Long-lived cloud keys in CI | 2 | 5 | 10 | GitHub OIDC only | Security | Rel 0/1 | Low | — | — |
 | CYB-07 | Known torch advisories on pinned 2.7.1 / torchvision 0.22.1 | 2 | 3 | 6 | Pin latest compatible pair; track upgrade; offline train risk limited; block prod image on unreviewed critical exploitability | Security | Rel C | Medium | Accepted through Phase 16 desk RC; reassess at ORR / upgrade | 2026-11-01 |
+| CYB-08 | Pinned transitive app CVE backlog (pillow/pyjwt/multipart/starlette/onnx/cryptography) | 3 | 3 | 9 | `ci-security` SCA allowlist + Trivy CRITICAL; coordinated upgrade train | Security | Rel E | Medium | Accepted via `security/sca-allowlist.txt` | 2026-11-01 |
 
 ## Risk appetite
 

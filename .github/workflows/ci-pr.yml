@@ -49,8 +49,8 @@ jobs:
       - name: Secret scan
         run: detect-secrets scan --baseline .secrets.baseline
 
-      # Remaining torch advisories tracked in docs/evidence/release-0/phase-01-gate.md
-      - name: Dependency audit
+      # Full SCA gate (allowlist + Trivy/OSV) lives in ci-security.yml.
+      - name: Dependency audit (informational)
         run: pip-audit --progress-spinner off
         continue-on-error: true
 
