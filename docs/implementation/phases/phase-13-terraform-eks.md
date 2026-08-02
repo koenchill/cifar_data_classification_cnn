@@ -4,7 +4,7 @@
 |---|---|
 | Release | D |
 | Depends | Phases 1 and 12 |
-| Status | `todo` |
+| Status | `done` |
 | Evidence | `docs/evidence/release-d/phase-13-gate.md` |
 
 ## Objective
@@ -29,15 +29,15 @@ Provision the AWS reference platform declaratively with isolated state and least
 
 ### State/bootstrap
 
-  - [ ] Encrypted versioned locked access-logged remote state; per-env; scoped plan/apply + approvals
+  - [x] Encrypted versioned locked access-logged remote state; per-env; scoped plan/apply + approvals
 
 ### Network + cluster
 
-  - [ ] Multi-AZ VPC; private nodes; Flow Logs; managed EKS; IRSA/Pod Identity; secret encryption
+  - [x] Multi-AZ VPC; private nodes; Flow Logs; managed EKS; IRSA/Pod Identity; secret encryption
 
 ### IAM + registry + policy-as-code
 
-  - [ ] Role catalog with boundaries; encrypted immutable ECR; plan policy tests
+  - [x] Role catalog with boundaries; encrypted immutable ECR; plan policy tests
 
 ## Deliverables
 
@@ -46,8 +46,8 @@ Provision the AWS reference platform declaratively with isolated state and least
 
 ## Exit gate
 
-- [ ] fmt/validate/test/plan + policy checks pass
-- [ ] State restore + least-privilege negative tests pass; staging reproducible
+- [x] fmt/validate/test/plan + policy checks pass
+- [x] State restore + least-privilege negative tests pass; staging reproducible
 
 ## Verify
 
@@ -68,8 +68,8 @@ Do not start the next phase.
 
 ## Done when
 
-- [ ] All workstream tasks complete
-- [ ] Deliverables exist at listed paths
-- [ ] Exit gate criteria satisfied
-- [ ] Verify commands recorded/pass
-- [ ] No global stop condition triggered
+- [x] All workstream tasks complete
+- [x] Deliverables exist at listed paths
+- [x] Exit gate criteria satisfied
+- [x] Verify commands recorded/pass
+- [x] No global stop condition triggered
