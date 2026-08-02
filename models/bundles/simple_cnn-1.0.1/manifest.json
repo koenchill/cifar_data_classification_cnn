@@ -4,18 +4,18 @@
     "files": [
       {
         "path": "bom.json",
-        "sha256": "01cb258307dbce127fbfd80b6fc87c2118be4067c946e80fe5ca45750aa8b831",
-        "bytes": 674
+        "sha256": "97f37edb1bfe077f1912d0872106d3e157f382f051daa9e29554aa584e04b270",
+        "bytes": 643
       },
       {
         "path": "classes.json",
-        "sha256": "decbd374b7f99dc64d12da708e91ffcc298c4fbf6e900cc13fbc0ec2e79e68e0",
-        "bytes": 166
+        "sha256": "c02f0367d141dce74c4bf3fce3d244e337b916880e54b63bd6bb46cdb892875c",
+        "bytes": 152
       },
       {
         "path": "metadata.json",
-        "sha256": "b1bae026140c3d4f6d04334beb1d6378dbea63d70ed4cadb04bf254af1f9d7d2",
-        "bytes": 1608
+        "sha256": "059d988a09f8c32ef61232f7bec1c082e09e48d27a300e91e27df76f3562dcac",
+        "bytes": 1530
       },
       {
         "path": "model.onnx",

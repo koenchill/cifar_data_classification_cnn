@@ -168,14 +168,15 @@ def create_app(
         await enforce_predict_rate_limit(request, principal, settings_dep)
         top_k = min(top_k, settings_dep.top_k_max)
 
+        # Validate payload before model readiness so abuse/input failures stay stable.
+        image, byte_length, content_type = await read_and_validate_image(file, settings_dep)
+
         loaded = runtime_dep.get()
         if loaded is None:
             raise HTTPException(
                 status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
                 detail="model_not_ready",
             )
-
-        image, byte_length, content_type = await read_and_validate_image(file, settings_dep)
         started = time.perf_counter()
         sem: asyncio.Semaphore = request.app.state.predict_sem
         try:

@@ -1,4 +1,4 @@
-"""End-to-end smoke: authenticated predict against bundled model."""
+"""End-to-end smoke: authenticated predict against a packed test bundle."""
 
 from __future__ import annotations
 
@@ -11,15 +11,22 @@ from fastapi.testclient import TestClient
 from cifar_cnn.api.app import create_app
 from cifar_cnn.api.config import Settings, reset_settings_cache
 from cifar_cnn.api.runtime import ModelRuntime
+from cifar_cnn.inference.bundle import pack_bundle
+from cifar_cnn.models.simple_cnn import SimpleCNN
 from tests.security.helpers import AUDIENCE, ISSUER, SECRET, auth_header, mint_token, png_bytes
-
-REPO_ROOT = Path(__file__).resolve().parents[2]
-BUNDLE_PATH = REPO_ROOT / "models" / "bundles" / "simple_cnn-1.0.1"
 
 
 @pytest.fixture
-def client() -> Iterator[TestClient]:
+def client(tmp_path: Path) -> Iterator[TestClient]:
     reset_settings_cache()
+    bundle = tmp_path / "e2e-bundle"
+    pack_bundle(
+        SimpleCNN(),
+        bundle,
+        bundle_id="e2e",
+        version="0.0.1",
+        run_parity=False,
+    )
     settings = Settings(
         app_env="development",
         oidc_mode="static",
@@ -28,7 +35,7 @@ def client() -> Iterator[TestClient]:
         oidc_jwks_url="",
         oidc_hs256_secret=SECRET,
         allow_anon_predict=False,
-        model_bundle_path=str(BUNDLE_PATH),
+        model_bundle_path=str(bundle),
         max_upload_bytes=1_000_000,
         rate_limit_per_minute=60,
         predict_timeout_sec=10.0,

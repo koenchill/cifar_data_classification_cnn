@@ -1,0 +1,4 @@
+# Keep model-bundle text artifacts byte-stable across platforms.
+models/bundles/**/*.json text eol=lf
+models/bundles/**/*.sig text eol=lf
+models/bundles/CURRENT text eol=lf
