@@ -1,0 +1,30 @@
+---
+description: App-root gold-standard layout for this CIFAR CNN enterprise repo
+alwaysApply: true
+---
+
+# Repository structure
+
+Use the `src/` layout. Installable package lives at `src/cifar_cnn/`.
+
+| Path | Purpose |
+|---|---|
+| `src/cifar_cnn/` | Application + ML library code only |
+| `configs/` | Typed configs by concern (`data`, `model`, `train`, `serve`) |
+| `scripts/` | Thin CLIs; no business logic |
+| `tests/` | `unit`, `integration`, `contract`, `security`, `e2e`, `fixtures` |
+| `docs/` | Governance, architecture, model cards, runbooks, evidence, implementation |
+| `deploy/` | Docker, Kustomize overlays, Argo CD |
+| `infra/terraform/` | Bootstrap + env stacks/modules |
+| `models/` | Guide path for `cnn_model.pth` (weights gitignored) |
+| `data/` | Local datasets; track manifests under `data/splits/` only |
+| `artifacts/` | Local run outputs (gitignored) |
+| `notebooks/` | Exploration only; never the production path |
+
+## Rules
+
+- Do not invent parallel top-level packages (`app/`, `backend/`, flat modules at root).
+- Guide baseline artifacts stay at `models/cnn_model.pth` for Phase 5 compliance.
+- Secrets never enter git; use `.env.example` templates only.
+- Prefer edits inside the phase card's Allowed paths.
+- Keep training code out of the final serving image unless explicitly required.

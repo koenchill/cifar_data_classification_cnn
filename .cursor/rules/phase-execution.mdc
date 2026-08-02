@@ -1,0 +1,31 @@
+---
+description: Execute enterprise phases one at a time with exit gates and evidence
+alwaysApply: true
+---
+
+# Phase execution
+
+Source of truth: `docs/implementation/CURSOR_EXECUTION_PLAN.md` and `docs/implementation/phases/`.
+
+For Release A (Phases 1–5), also obey `docs/implementation/GUIDE_TRACEABILITY.md` — student-guide Steps 1–7 must be exact; no gaps.
+
+## Required behavior
+
+1. Execute **one phase per request** unless the user explicitly expands scope.
+2. Read the phase card first; honor **Allowed paths** and **Forbidden**.
+3. Complete workstreams in order; update task checkboxes when finishing work.
+4. For Phases 2–5, verify each related row in `GUIDE_TRACEABILITY.md` before claiming the exit gate.
+5. Write exit-gate evidence to the path listed on the phase card under `docs/evidence/`.
+6. Stop at the exit gate. Summarize evidence, verify commands, and blockers.
+7. Do not start the next phase automatically.
+8. When committing/pushing, follow `CONTRIBUTING.md`: prefer `feature/<phase>-<topic>` branches and PRs into `dev` (not direct pushes to `main`).
+
+## Claims and stop conditions
+
+- Never claim “NIST certified”; use “mapped to selected NIST AI RMF outcomes”.
+- Do not make unsupported real-world safety or performance claims.
+- Honor global stop conditions in the execution plan (leakage, secrets, unsigned artifacts, IAM exposure, SLO breaches, OIDC/RBAC failures, unaccepted AI risk).
+
+## Current recommended start
+
+If no phase is specified, begin with **Phase 0** (`docs/implementation/phases/phase-00-governance.md`).
