@@ -1,0 +1,52 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: cifar-cnn-api
+  labels:
+    app.kubernetes.io/name: cifar-cnn-api
+    prometheus: kube-prometheus
+    role: alert-rules
+spec:
+  groups:
+    - name: cifar-cnn-api.slo
+      rules:
+        - alert: CifarCnnApiHighErrorRate
+          expr: |
+            (
+              sum(rate(http_requests_total{namespace="cifar-cnn",status=~"5.."}[5m]))
+              /
+              clamp_min(sum(rate(http_requests_total{namespace="cifar-cnn"}[5m])), 1e-9)
+            ) > 0.01
+          for: 10m
+          labels:
+            severity: warning
+          annotations:
+            summary: "CIFAR-CNN API error rate above SLO"
+            description: "5xx ratio > 1% for 10m in namespace cifar-cnn."
+        - alert: CifarCnnApiHighLatency
+          expr: |
+            histogram_quantile(
+              0.95,
+              sum(rate(http_request_duration_seconds_bucket{namespace="cifar-cnn"}[5m])) by (le)
+            ) * 1000 > 100
+          for: 15m
+          labels:
+            severity: warning
+          annotations:
+            summary: "CIFAR-CNN API p95 latency above 100ms target"
+        - alert: CifarCnnApiReplicaShortage
+          expr: kube_deployment_status_replicas_available{namespace="cifar-cnn",deployment="api"} < 2
+          for: 5m
+          labels:
+            severity: critical
+          annotations:
+            summary: "API available replicas below HA floor (<2)"
+        - alert: CifarCnnApiAuthDeniesSpike
+          expr: |
+            sum(rate(http_requests_total{namespace="cifar-cnn",status=~"401|403"}[5m])) > 5
+          for: 10m
+          labels:
+            severity: info
+            category: security
+          annotations:
+            summary: "Elevated 401/403 rate — possible auth abuse or misconfig"

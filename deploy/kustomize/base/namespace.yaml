@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: cifar-cnn
+  labels:
+    # Restricted Pod Security Standards (PSS)
+    pod-security.kubernetes.io/enforce: restricted
+    pod-security.kubernetes.io/audit: restricted
+    pod-security.kubernetes.io/warn: restricted
+    # Node pool separation (Phase 13/14)
+    cifar-cnn.io/workload-pool: inference
