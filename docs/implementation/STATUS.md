@@ -7,7 +7,7 @@
 | 02 Data contract | `done` | Gate: docs/evidence/release-a/phase-02-gate.md |
 | 03 SimpleCNN | `done` | Gate: docs/evidence/release-a/phase-03-gate.md |
 | 04 Baseline training | `done` | Gate: docs/evidence/release-a/phase-04-gate.md |
-| 05 Baseline evaluation (Release A) | `todo` | Steps 5–7 + §§1/4; answer all 20 tough questions |
+| 05 Baseline evaluation (Release A) | `done` | Gate: docs/evidence/release-a/phase-05-gate.md; Release A closed |
 | 06 Training controls | `todo` | |
 | 07 Improved CNN | `todo` | |
 | 08 Rigorous evaluation | `todo` | |

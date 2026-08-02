@@ -1,0 +1,16 @@
+{
+  "total": 10000,
+  "correct": 1000,
+  "accuracy_pct": 10.0,
+  "avg_loss": 2.30598779151234,
+  "message": "Accuracy of the network on 10000 test images: 10.00%",
+  "guide_line": "Accuracy of the network on 10000 test images: 10.00%",
+  "official_test_locked": true,
+  "non_production": true,
+  "data": {
+    "dataset": "FakeCIFAR10",
+    "test_size": 10000
+  },
+  "model": "SimpleCNN",
+  "device": "cpu"
+}
