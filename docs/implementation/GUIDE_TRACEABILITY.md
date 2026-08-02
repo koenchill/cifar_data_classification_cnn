@@ -24,12 +24,12 @@ Enterprise phases **2–5** (plus Phase 1 tool pinning) must satisfy every row. 
 | 3.2 | `fc1` | `Linear(64*4*4, 64)` i.e. `Linear(1024, 64)` | 3 | `test_simple_cnn.py` ✅ |
 | 3.2 | `fc2` | `Linear(64, 10)` | 3 | `test_simple_cnn.py` ✅ |
 | 3.2 | Forward | `pool(relu(conv1))` ×3 → `view(-1, 64*4*4)` → `relu(fc1)` → `fc2` (logits) | 3 | forward/shape tests ✅ |
-| 3.3 | Loss | `nn.CrossEntropyLoss()` | 4 | trainer test |
-| 3.3 | Optimizer | `optim.Adam(params, lr=0.001)` | 4 | trainer test |
-| 3.4 | Epochs | `10` | 4 | baseline config |
-| 3.4 | Step order | `zero_grad` → forward → loss → `backward` → `step` | 4 | unit step test |
-| 3.4 | Loss print | Every 100 mini-batches; print epoch/batch/loss | 4 | log evidence |
-| 3.4 | Guide bug fix | **Must** accumulate `running_loss += loss.item()` before print (guide omits this) | 4 | corrected-loop test |
+| 3.3 | Loss | `nn.CrossEntropyLoss()` | 4 | `tests/unit/test_trainer.py` ✅ |
+| 3.3 | Optimizer | `optim.Adam(params, lr=0.001)` | 4 | `tests/unit/test_trainer.py` ✅ |
+| 3.4 | Epochs | `10` | 4 | `configs/train/baseline.yaml` ✅ |
+| 3.4 | Step order | `zero_grad` → forward → loss → `backward` → `step` | 4 | `test_trainer_step_order_and_types` ✅ |
+| 3.4 | Loss print | Every 100 mini-batches; print epoch/batch/loss | 4 | smoke + `loss_history` ✅ |
+| 3.4 | Guide bug fix | **Must** accumulate `running_loss += loss.item()` before print (guide omits this) | 4 | `test_running_loss_accumulation` ✅ |
 | 3.5 | Eval mode | `torch.no_grad()`; use `torch.max(outputs, 1)` | 5 | eval test |
 | 3.5 | Coverage | Exactly 10,000 test images | 5 | count assert |
 | 3.5 | Metric | Report accuracy `%` on those 10,000 | 5 | metrics file |
