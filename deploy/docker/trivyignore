@@ -1,0 +1,4 @@
+# Accepted findings for Release C image gate — see risk_register CYB-07.
+# Revisit on/before 2026-11-01; remove entries when torch/torchvision upgrade lands.
+# Intentionally empty until a CRITICAL fixed-unavailable CVE is observed in CI;
+# HIGH torch advisories are tracked under CYB-07 and do not block this CRITICAL gate.

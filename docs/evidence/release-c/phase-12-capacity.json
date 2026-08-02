@@ -1,0 +1,36 @@
+{
+  "phase": 12,
+  "mode": "inprocess",
+  "torch": "2.7.1+cpu",
+  "metrics": {
+    "iterations": 25.0,
+    "errors": 0.0,
+    "p50_ms": 0.9580000187270343,
+    "p95_ms": 1.5095999697223306,
+    "mean_ms": 1.0644480003975332,
+    "throughput_rps": 939.454064103212
+  },
+  "recommendation": {
+    "replicas": 1,
+    "workers": 1,
+    "resources": {
+      "requests": {
+        "cpu": "250m",
+        "memory": "512Mi"
+      },
+      "limits": {
+        "cpu": "1000m",
+        "memory": "2Gi"
+      }
+    },
+    "notes": [
+      "Derived from local/smoke measurement; re-benchmark on target hardware before prod.",
+      "Deploy images by digest only; mutable tags are forbidden for promotion.",
+      "Torch stack CVEs remain under CYB-07 until upgrade; image rebuild SLA applies."
+    ],
+    "startup_budget_sec": 45,
+    "target_p95_ms": 100,
+    "observed_p95_ms": 1.5095999697223306
+  },
+  "generated_utc_hint": "local measurement; CI may refresh on image workflow"
+}

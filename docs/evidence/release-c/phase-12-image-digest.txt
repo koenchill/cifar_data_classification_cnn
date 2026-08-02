@@ -1,0 +1,5 @@
+﻿image=cifar-cnn-api:local
+digest=sha256:6f43777bf8ad41ffaf3bf16645438463ebe36653b6453252e6bb7166101004c1
+git_sha=local-build
+deploy_rule=digest_only
+note=Local Docker Desktop build evidence; GHCR digest + cosign produced by ci-image on push to dev/main

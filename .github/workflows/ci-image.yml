@@ -1,0 +1,150 @@
+# Build / scan / SBOM / sign the hardened API image.
+# PR: lint + build + CRITICAL vuln scan (no registry push / no deploy).
+# Push to dev/main: publish digest to GHCR, SBOM artifact, keyless cosign.
+# Actions pinned by commit SHA. Deploy by digest only — never mutable tag alone.
+
+name: ci-image
+
+on:
+  pull_request:
+    paths:
+      - "deploy/docker/**"
+      - "src/cifar_cnn/api/**"
+      - "src/cifar_cnn/inference/**"
+      - "models/bundles/**"
+      - "pyproject.toml"
+      - ".github/workflows/ci-image.yml"
+  push:
+    branches: [dev, main]
+    paths:
+      - "deploy/docker/**"
+      - "src/cifar_cnn/api/**"
+      - "src/cifar_cnn/inference/**"
+      - "models/bundles/**"
+      - "pyproject.toml"
+      - ".github/workflows/ci-image.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: ci-image-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  IMAGE_NAME: ghcr.io/${{ github.repository }}/api
+  LOCAL_TAG: cifar-cnn-api:ci
+
+jobs:
+  hadolint:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: none
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Hadolint
+        uses: hadolint/hadolint-action@54c9adbab1582c2ef04b2016b760714a4bfde3cf # v3.1.0
+        with:
+          dockerfile: deploy/docker/Dockerfile
+          failure-threshold: warning
+
+  build-scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    needs: [hadolint]
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+      attestations: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Materialize root dockerignore from deploy/docker
+        run: cp deploy/docker/dockerignore .dockerignore
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@b5ca514318bd6ebac0fb2aedd5d36ec1b5c232a2 # v3.10.0
+
+      - name: Log in to GHCR
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567 # v3.3.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Docker metadata
+        id: meta
+        uses: docker/metadata-action@369eb591f429131d6889c46b94e711f089e6ca96 # v5.6.1
+        with:
+          images: ${{ env.IMAGE_NAME }}
+          tags: |
+            type=sha,prefix=sha-
+            type=ref,event=branch
+
+      - name: Build image
+        id: build
+        uses: docker/build-push-action@471d1dc4e07e5cdedd4c2171150001c434f0b7a4 # v6.15.0
+        with:
+          context: .
+          file: deploy/docker/Dockerfile
+          push: ${{ github.event_name != 'pull_request' }}
+          load: ${{ github.event_name == 'pull_request' }}
+          tags: |
+            ${{ env.LOCAL_TAG }}
+            ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          provenance: true
+          sbom: ${{ github.event_name != 'pull_request' }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Trivy image scan (CRITICAL gate)
+        uses: aquasecurity/trivy-action@6c175e9c4083a92bbca2f9724c8a5e33bc2d97a5 # v0.30.0
+        with:
+          image-ref: ${{ github.event_name == 'pull_request' && env.LOCAL_TAG || format('{0}:sha-{1}', env.IMAGE_NAME, github.sha) }}
+          format: table
+          exit-code: "1"
+          severity: CRITICAL
+          ignore-unfixed: true
+          trivyignores: deploy/docker/trivyignore
+
+      - name: Write digest evidence
+        if: github.event_name != 'pull_request'
+        run: |
+          mkdir -p docs/evidence/release-c
+          cat > docs/evidence/release-c/phase-12-image-digest.txt <<EOF
+          image=${IMAGE_NAME}
+          digest=${{ steps.build.outputs.digest }}
+          git_sha=${GITHUB_SHA}
+          deploy_rule=digest_only
+          EOF
+
+      - name: Generate CycloneDX SBOM
+        if: github.event_name != 'pull_request'
+        uses: anchore/sbom-action@f325610c9f50a54015d37c8d16cb3b0e2c8f4de0 # v0.18.0
+        with:
+          image: ${{ env.IMAGE_NAME }}@${{ steps.build.outputs.digest }}
+          format: cyclonedx-json
+          output-file: docs/evidence/release-c/phase-12-image-sbom.cdx.json
+          upload-artifact: true
+
+      - name: Install cosign
+        if: github.event_name != 'pull_request'
+        uses: sigstore/cosign-installer@d7d6bc7722e3daa8354c50bcb52f4837da5e9b6a # v3.8.1
+
+      - name: Keyless sign image digest
+        if: github.event_name != 'pull_request'
+        env:
+          DIGEST: ${{ steps.build.outputs.digest }}
+        run: cosign sign --yes "${IMAGE_NAME}@${DIGEST}"
+
+      - name: Upload digest evidence
+        if: github.event_name != 'pull_request'
+        uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 # v4.6.0
+        with:
+          name: phase-12-image-digest
+          path: docs/evidence/release-c/phase-12-image-digest.txt
