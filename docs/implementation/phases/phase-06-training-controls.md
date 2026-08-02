@@ -4,7 +4,7 @@
 |---|---|
 | Release | B |
 | Depends | Phase 5 |
-| Status | `todo` |
+| Status | `done` |
 | Evidence | `docs/evidence/release-b/phase-06-gate.md` |
 
 ## Objective
@@ -30,15 +30,15 @@ Add typed config, determinism, resumable checkpoints, early stopping, scheduling
 
 ### Controls
 
-  - [ ] Seed generators/workers; validate config; atomic full-state checkpoints; best/last/resume
+  - [x] Seed generators/workers; validate config; atomic full-state checkpoints; best/last/resume
 
 ### Tracking
 
-  - [ ] Human-readable + JSONL/CSV/TensorBoard; attach identities
+  - [x] Human-readable + JSONL/CSV/TensorBoard; attach identities
 
 ### Authorization
 
-  - [ ] Restrict artifact writes; separate training/eval/release identities (policy)
+  - [x] Restrict artifact writes; separate training/eval/release identities (policy)
 
 ## Deliverables
 
@@ -48,8 +48,8 @@ Add typed config, determinism, resumable checkpoints, early stopping, scheduling
 
 ## Exit gate
 
-- [ ] Resume and best-model restoration tests pass
-- [ ] Two short seeded runs meet tolerance; unauthorized mutation denied
+- [x] Resume and best-model restoration tests pass
+- [x] Two short seeded runs meet tolerance; unauthorized mutation denied
 
 ## Verify
 
@@ -69,8 +69,8 @@ Do not start the next phase.
 
 ## Done when
 
-- [ ] All workstream tasks complete
-- [ ] Deliverables exist at listed paths
-- [ ] Exit gate criteria satisfied
-- [ ] Verify commands recorded/pass
-- [ ] No global stop condition triggered
+- [x] All workstream tasks complete
+- [x] Deliverables exist at listed paths
+- [x] Exit gate criteria satisfied
+- [x] Verify commands recorded/pass
+- [x] No global stop condition triggered
