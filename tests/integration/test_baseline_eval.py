@@ -5,7 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 
 import torch
-from tests.unit.fake_cifar import FakeCIFAR10
+from fake_cifar import FakeCIFAR10
 from torch.utils.data import Subset
 
 from cifar_cnn.data.constants import TEST_SIZE

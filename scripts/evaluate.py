@@ -27,11 +27,10 @@ def _load_yaml(path: Path) -> dict:
 
 def _fake_loaders(batch_size: int = 32):
     """Leakage-safe FakeCIFAR10 loaders (official test size = 10,000)."""
-    # Ensure repo-root tests package is importable when running as a script.
-    root = Path(__file__).resolve().parents[1]
-    if str(root) not in sys.path:
-        sys.path.insert(0, str(root))
-    from tests.unit.fake_cifar import FakeCIFAR10
+    unit = Path(__file__).resolve().parents[1] / "tests" / "unit"
+    if str(unit) not in sys.path:
+        sys.path.insert(0, str(unit))
+    from fake_cifar import FakeCIFAR10
 
     trainset = FakeCIFAR10(train=True)
     testset = FakeCIFAR10(train=False)
