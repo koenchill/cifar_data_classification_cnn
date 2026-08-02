@@ -21,7 +21,7 @@ Routine implementation lands through **PRs into `dev`**. Promote integrated work
 1. Require a pull request before merging  
 2. Require at least 1 approving review (or admin solo-ack while single-owner; still use PR + CI)  
 3. Require review from CODEOWNERS for `/infra`, `/deploy`, `/.github`, governance docs  
-4. Require status checks: `lint-test` and `iam-negative-guard` (`ci-pr.yml`); `title` (`pr-title.yml`); prefer also `sast`, `sca`, `dast` (`ci-security.yml`)  
+4. Require status checks (enabled on `dev` and `main`): `lint-test`, `iam-negative-guard` (`ci-pr.yml`); `title` (`pr-title.yml`); `sast`, `sca`, `dast` (`ci-security.yml`)  
 5. Require conversation resolution before merge  
 6. Restrict who can push to matching branches (admins optional bypass only for break-glass)  
 7. **Prohibit direct production changes** — production desired state updates only via reviewed PR + Argo promotion (Phase 15), never `kubectl apply` from laptops as routine path  

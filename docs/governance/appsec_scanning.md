@@ -35,6 +35,8 @@ Container image SCA/signing remains in `ci-image` (Trivy image CRITICAL + cosign
 
 Target runs in development mode with a packed FakeCIFAR-sized SimpleCNN bundle, static HS256 OIDC, anonymous predict **disabled**.
 
-## Required checks (recommended GitHub settings)
+## Required checks (GitHub branch protection)
 
-Add status checks: `sast`, `sca`, `dast` (job names from `ci-security`) alongside existing `lint-test`, `iam-negative-guard`, `title`.
+Enabled on **`dev`** and **`main`** (strict / up-to-date required):
+
+`lint-test`, `iam-negative-guard`, `title`, `sast`, `sca`, `dast`
