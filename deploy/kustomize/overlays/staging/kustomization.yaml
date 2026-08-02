@@ -1,0 +1,21 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../base
+
+labels:
+  - pairs:
+      cifar-cnn.io/env: staging
+    includeSelectors: false
+    includeTemplates: true
+
+images:
+  - name: ghcr.io/koenchill/cifar_data_classification_cnn/api
+    newName: ghcr.io/koenchill/cifar_data_classification_cnn/api
+    digest: sha256:6f43777bf8ad41ffaf3bf16645438463ebe36653b6453252e6bb7166101004c1
+
+patches:
+  - path: patch-sa-irsa.yaml
+  - path: patch-secretstore-region.yaml
+  - path: patch-env.yaml

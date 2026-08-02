@@ -1,0 +1,30 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: cifar-cnn
+
+resources:
+  - namespace.yaml
+  - serviceaccount.yaml
+  - rbac.yaml
+  - resourcequota.yaml
+  - limitrange.yaml
+  - networkpolicy-default-deny.yaml
+  - networkpolicy-api.yaml
+  - deployment.yaml
+  - service.yaml
+  - pdb.yaml
+  - hpa.yaml
+  - external-secret.yaml
+  - configmap-observability.yaml
+  - prometheusrule.yaml
+  - grafana-dashboard.yaml
+
+labels:
+  - pairs:
+      app.kubernetes.io/name: cifar-cnn-api
+      app.kubernetes.io/part-of: cifar-cnn
+      app.kubernetes.io/component: inference
+    # Keep false so default-deny NetworkPolicy podSelector: {} stays namespace-wide.
+    includeSelectors: false
+    includeTemplates: true

@@ -1,0 +1,57 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: api-allow
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: cifar-cnn-api
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    # Ingress controller / mesh only (label selector — not open to all pods)
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.amazonaws.com/name: kube-system
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: aws-load-balancer-controller
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.amazonaws.com/name: kube-system
+          podSelector:
+            matchLabels:
+              k8s-app: kube-dns
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: prometheus
+      ports:
+        - protocol: TCP
+          port: 8000
+  egress:
+    # DNS
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.amazonaws.com/name: kube-system
+          podSelector:
+            matchLabels:
+              k8s-app: kube-dns
+      ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
+    # HTTPS to OIDC IdP + AWS APIs (Secrets Manager via IRSA) — still not default-allow-all
+    - to:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+            except:
+              - 10.0.0.0/8
+              - 172.16.0.0/12
+              - 192.168.0.0/16
+      ports:
+        - protocol: TCP
+          port: 443

@@ -16,7 +16,7 @@
 | 11 Secure API | `done` | Gate: docs/evidence/release-c/phase-11-gate.md |
 | 12 Docker envelope (Release C) | `done` | Gate: docs/evidence/release-c/phase-12-gate.md; Release C closed |
 | 13 Terraform / EKS | `done` | Gate: docs/evidence/release-d/phase-13-gate.md |
-| 14 K8s runtime | `todo` | |
+| 14 K8s runtime | `done` | Gate: docs/evidence/release-d/phase-14-gate.md |
 | 15 Argo CD (Release D) | `todo` | |
 | 16 Verification / QA | `todo` | |
 | 17 Ops release (Release E) | `todo` | |

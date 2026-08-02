@@ -4,7 +4,7 @@
 |---|---|
 | Release | D |
 | Depends | Phase 13 |
-| Status | `todo` |
+| Status | `done` |
 | Evidence | `docs/evidence/release-d/phase-14-gate.md` |
 
 ## Objective
@@ -28,15 +28,15 @@ Deploy the signed artifact under enforced workload, network, availability, and c
 
 ### Policy + network + secrets
 
-  - [ ] Restricted PSS; default-deny NetworkPolicies; External Secrets; tight RBAC
+  - [x] Restricted PSS; default-deny NetworkPolicies; External Secrets; tight RBAC
 
 ### Availability + capacity
 
-  - [ ] >=2 replicas; topology; PDB; probes; measured requests/limits; HPA; pool separation
+  - [x] >=2 replicas; topology; PDB; probes; measured requests/limits; HPA; pool separation
 
 ### Observability
 
-  - [ ] Logs/metrics/traces; dashboards/alerts for SLOs and security/ops signals
+  - [x] Logs/metrics/traces; dashboards/alerts for SLOs and security/ops signals
 
 ## Deliverables
 
@@ -45,8 +45,8 @@ Deploy the signed artifact under enforced workload, network, availability, and c
 
 ## Exit gate
 
-- [ ] Policy/manifest and network positive/negative tests pass
-- [ ] Scale/rollout/eviction/node-loss tests pass without unacceptable interruption
+- [x] Policy/manifest and network positive/negative tests pass
+- [x] Scale/rollout/eviction/node-loss tests pass without unacceptable interruption
 
 ## Verify
 
@@ -67,8 +67,8 @@ Do not start the next phase.
 
 ## Done when
 
-- [ ] All workstream tasks complete
-- [ ] Deliverables exist at listed paths
-- [ ] Exit gate criteria satisfied
-- [ ] Verify commands recorded/pass
-- [ ] No global stop condition triggered
+- [x] All workstream tasks complete
+- [x] Deliverables exist at listed paths
+- [x] Exit gate criteria satisfied
+- [x] Verify commands recorded/pass
+- [x] No global stop condition triggered
