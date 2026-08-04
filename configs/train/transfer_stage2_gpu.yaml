@@ -1,0 +1,34 @@
+# GPU stage 2 — full ResNet18 fine-tune (unfrozen).
+# Used by: python scripts/train_transfer_live.py --device cuda
+model: ResNet18CIFAR
+pretrained: true
+freeze_mode: none
+normalize: imagenet
+train_augment: true
+color_jitter: true
+cutout: true
+cutout_p: 0.5
+epochs: 60
+lr: 0.05
+optimizer: sgd
+momentum: 0.9
+weight_decay: 0.0005
+label_smoothing: 0.05
+batch_size: 128
+seed: 42
+device: cuda
+log_every_n_batches: 50
+artifact_dir: artifacts/transfer_stage2_gpu
+early_stop_patience: 10
+early_stop_min_delta: 0.0001
+scheduler: cosine
+scheduler_t_max: 60
+scheduler_eta_min: 0.0001
+identity: training
+run_id: transfer-stage2-gpu
+deterministic: true
+data_root: ./data
+split_manifest: data/splits/split_manifest.json
+export_state_dict: model_best.pth
+smoke_max_batches: null
+resume_from: null

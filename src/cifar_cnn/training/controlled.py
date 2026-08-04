@@ -8,7 +8,7 @@ from typing import Any
 
 import torch
 import torch.nn as nn
-from torch.optim.lr_scheduler import StepLR
+from torch.optim.lr_scheduler import CosineAnnealingLR, StepLR
 from torch.utils.data import DataLoader
 
 from cifar_cnn.training.authz import assert_artifact_write_allowed
@@ -84,17 +84,27 @@ def controlled_train_loop(
 
     device = torch.device(config.device)
     model = model.to(device)
-    criterion = build_criterion()
-    optimizer = build_optimizer(model, lr=config.lr)
-    scheduler = (
-        StepLR(
+    criterion = build_criterion(label_smoothing=config.label_smoothing)
+    optimizer = build_optimizer(
+        model,
+        lr=config.lr,
+        optimizer=config.optimizer,
+        weight_decay=config.weight_decay,
+        momentum=config.momentum,
+    )
+    if config.scheduler == "step":
+        scheduler = StepLR(
             optimizer,
             step_size=config.scheduler_step_size,
             gamma=config.scheduler_gamma,
         )
-        if config.scheduler == "step"
-        else None
-    )
+    elif config.scheduler == "cosine":
+        t_max = int(config.scheduler_t_max or config.epochs)
+        scheduler = CosineAnnealingLR(
+            optimizer, T_max=t_max, eta_min=config.scheduler_eta_min
+        )
+    else:
+        scheduler = None
 
     ckpt = CheckpointManager(config.artifact_dir, identity=config.identity)
     tracker = ExperimentTracker(
@@ -102,6 +112,7 @@ def controlled_train_loop(
         RunIdentity(
             run_id=config.run_id,
             identity=config.identity,
+            model=config.model,
             git_sha=git_sha_or_none(),
         ),
     )
@@ -109,6 +120,11 @@ def controlled_train_loop(
     start_epoch = 0
     best_metric = float("inf")
     resumed_from: int | None = None
+    if config.init_weights:
+        from cifar_cnn.models.simple_cnn import load_state_dict
+
+        load_state_dict(model, config.init_weights)
+        tracker.log(f"init_weights={config.init_weights} (fresh optimizer/scheduler)")
     if config.resume_from:
         state = ckpt.restore(
             config.resume_from, model=model, optimizer=optimizer, scheduler=scheduler

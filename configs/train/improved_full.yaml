@@ -1,0 +1,33 @@
+# ImprovedCNN + train-only aug on 45k/5k locked split (official 10k test unused).
+# One-command full run:
+#   python scripts/train_controlled.py --config configs/train/improved_full.yaml --live
+# Then report on locked test (do not tune on this):
+#   python scripts/evaluate_rigorous.py --live --model ImprovedCNN \
+#     --checkpoint artifacts/improved_full/model_best.pth \
+#     --out-dir artifacts/improved_full_rigorous
+model: ImprovedCNN
+batch_norm: true
+dropout: true
+dropout_p: 0.3
+train_augment: true
+color_jitter: false
+epochs: 40
+lr: 0.001
+batch_size: 64
+seed: 42
+device: cpu
+log_every_n_batches: 100
+artifact_dir: artifacts/improved_full
+early_stop_patience: 7
+early_stop_min_delta: 0.0001
+scheduler: step
+scheduler_step_size: 15
+scheduler_gamma: 0.1
+identity: training
+run_id: improved-full-v1
+deterministic: true
+data_root: ./data
+split_manifest: data/splits/split_manifest.json
+export_state_dict: model_best.pth
+smoke_max_batches: null
+resume_from: null

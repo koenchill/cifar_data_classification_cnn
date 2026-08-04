@@ -13,7 +13,7 @@ from typing import Any
 import torch
 import torch.nn as nn
 from torch import Tensor
-from torch.optim import Adam
+from torch.optim import Adam, Optimizer, SGD
 from torch.utils.data import DataLoader
 
 from cifar_cnn.models.simple_cnn import SimpleCNN, save_state_dict
@@ -41,12 +41,34 @@ class TrainResult:
     elapsed_sec: float = 0.0
 
 
-def build_criterion() -> nn.CrossEntropyLoss:
-    return nn.CrossEntropyLoss()
+def build_criterion(*, label_smoothing: float = 0.0) -> nn.CrossEntropyLoss:
+    if not 0.0 <= label_smoothing < 1.0:
+        raise ValueError("label_smoothing must be in [0, 1)")
+    return nn.CrossEntropyLoss(label_smoothing=label_smoothing)
 
 
-def build_optimizer(model: nn.Module, lr: float = 0.001) -> Adam:
-    return Adam(model.parameters(), lr=lr)
+def build_optimizer(
+    model: nn.Module,
+    lr: float = 0.001,
+    *,
+    optimizer: str = "adam",
+    weight_decay: float = 0.0,
+    momentum: float = 0.9,
+) -> Optimizer:
+    """Build optimizer over trainable params only (respects freeze_mode)."""
+    params = [p for p in model.parameters() if p.requires_grad]
+    if not params:
+        raise ValueError("No trainable parameters for optimizer")
+    name = optimizer.lower()
+    if name == "sgd":
+        return SGD(params, lr=lr, momentum=momentum, weight_decay=weight_decay)
+    if name == "adam":
+        return Adam(params, lr=lr, weight_decay=weight_decay)
+    if name == "adamw":
+        from torch.optim import AdamW
+
+        return AdamW(params, lr=lr, weight_decay=weight_decay)
+    raise ValueError(f"Unsupported optimizer: {optimizer}")
 
 
 def train_step(

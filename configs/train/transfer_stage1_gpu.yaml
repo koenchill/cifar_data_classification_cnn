@@ -1,0 +1,33 @@
+# GPU stage 1 — ResNet18 head-only (ImageNet pretrained).
+#   python scripts/train_transfer_live.py --device cuda
+model: ResNet18CIFAR
+pretrained: true
+freeze_mode: backbone
+normalize: imagenet
+train_augment: true
+color_jitter: true
+cutout: true
+cutout_p: 0.25
+epochs: 8
+lr: 0.001
+optimizer: adamw
+weight_decay: 0.0001
+label_smoothing: 0.05
+batch_size: 128
+seed: 42
+device: cuda
+log_every_n_batches: 50
+artifact_dir: artifacts/transfer_stage1_gpu
+early_stop_patience: 4
+early_stop_min_delta: 0.0001
+scheduler: cosine
+scheduler_t_max: 8
+scheduler_eta_min: 0.00001
+identity: training
+run_id: transfer-stage1-gpu
+deterministic: true
+data_root: ./data
+split_manifest: data/splits/split_manifest.json
+export_state_dict: model_best.pth
+smoke_max_batches: null
+resume_from: null

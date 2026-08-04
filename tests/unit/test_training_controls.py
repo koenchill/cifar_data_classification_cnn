@@ -28,6 +28,68 @@ def test_config_validation_rejects_bad_identity() -> None:
         ControlledTrainConfig(identity="hacker").validate()
 
 
+def test_config_validation_rejects_unknown_model() -> None:
+    with pytest.raises(ConfigValidationError):
+        ControlledTrainConfig(model="ResNet99").validate()
+
+
+def test_load_improved_full_config() -> None:
+    from cifar_cnn.training.config import load_controlled_config
+
+    cfg = load_controlled_config("configs/train/improved_full.yaml")
+    assert cfg.model == "ImprovedCNN"
+    assert cfg.train_augment is True
+    assert cfg.epochs == 40
+    assert cfg.export_state_dict == "model_best.pth"
+
+
+def test_load_transfer_stage_configs() -> None:
+    from cifar_cnn.training.config import load_controlled_config
+
+    s1 = load_controlled_config("configs/train/transfer_stage1.yaml")
+    s2 = load_controlled_config("configs/train/transfer_stage2.yaml")
+    assert s1.model == "ResNet18CIFAR"
+    assert s1.pretrained is True
+    assert s1.freeze_mode == "backbone"
+    assert s1.normalize == "imagenet"
+    assert s2.freeze_mode == "none"
+    assert s2.optimizer == "sgd"
+
+
+def test_load_improved_boost_config() -> None:
+    from cifar_cnn.training.config import load_controlled_config
+
+    cfg = load_controlled_config("configs/train/improved_boost.yaml")
+    assert cfg.model == "ImprovedCNN"
+    assert cfg.cutout is True
+    assert cfg.scheduler == "cosine"
+    assert cfg.label_smoothing == 0.05
+    assert cfg.optimizer == "adamw"
+    assert cfg.weight_decay > 0
+    assert cfg.init_weights is not None
+
+
+def test_load_transfer_gpu_configs() -> None:
+    from cifar_cnn.training.config import load_controlled_config
+
+    s1 = load_controlled_config("configs/train/transfer_stage1_gpu.yaml")
+    s2 = load_controlled_config("configs/train/transfer_stage2_gpu.yaml")
+    assert s1.device == "cuda"
+    assert s2.device == "cuda"
+    assert s1.scheduler == "cosine"
+    assert s2.scheduler == "cosine"
+    assert s2.cutout is True
+
+
+def test_train_augment_includes_cutout_when_enabled() -> None:
+    from torchvision.transforms import RandomErasing
+
+    from cifar_cnn.data.transforms import build_train_augment_transform
+
+    tf = build_train_augment_transform(cutout=True, cutout_p=0.5)
+    assert RandomErasing in [type(t) for t in tf.transforms]
+
+
 def test_unauthorized_mutation_denied(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.chdir(tmp_path)
     (tmp_path / "artifacts").mkdir()
