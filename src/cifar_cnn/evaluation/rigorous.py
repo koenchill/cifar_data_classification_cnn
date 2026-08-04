@@ -64,11 +64,14 @@ def collect_predictions(
     device: str | torch.device = "cpu",
     criterion: nn.Module | None = None,
     max_batches: int | None = None,
+    tta_flip: bool = False,
 ) -> tuple[PredictionBatch, float | None]:
+    """Collect logits/probs. Optional horizontal-flip TTA averages softmax probs."""
     device_t = torch.device(device)
     model = model.to(device_t)
     model.eval()
     logits_l: list[Tensor] = []
+    probs_l: list[Tensor] = []
     labels_l: list[Tensor] = []
     loss_sum = 0.0
     loss_n = 0
@@ -79,14 +82,21 @@ def collect_predictions(
             images = images.to(device_t)
             labels = labels.to(device_t)
             outputs = model(images)
+            probs = F.softmax(outputs, dim=1)
+            if tta_flip:
+                flipped = torch.flip(images, dims=[3])
+                probs = 0.5 * (probs + F.softmax(model(flipped), dim=1))
+                # Keep logits aligned to the averaged decision for reporting.
+                outputs = torch.log(probs.clamp_min(1e-12))
             logits_l.append(outputs.cpu())
+            probs_l.append(probs.cpu())
             labels_l.append(labels.cpu())
-            if criterion is not None:
+            if criterion is not None and not tta_flip:
                 loss_sum += float(criterion(outputs, labels).item()) * int(labels.size(0))
                 loss_n += int(labels.size(0))
     logits = torch.cat(logits_l, dim=0)
     labels_t = torch.cat(labels_l, dim=0)
-    probs = F.softmax(logits, dim=1)
+    probs = torch.cat(probs_l, dim=0)
     preds = torch.argmax(probs, dim=1)
     avg_loss = (loss_sum / loss_n) if loss_n else None
     return PredictionBatch(logits=logits, probs=probs, preds=preds, labels=labels_t), avg_loss

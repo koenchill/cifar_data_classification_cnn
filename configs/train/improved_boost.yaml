@@ -1,0 +1,38 @@
+# CPU boost stack: warm-start ImprovedCNN + Cutout + cosine + label smooth + WD.
+#   python scripts/train_controlled.py --config configs/train/improved_boost.yaml --live
+#   python scripts/evaluate_rigorous.py --live --model ImprovedCNN \
+#     --checkpoint artifacts/improved_boost/model_best.pth \
+#     --out-dir artifacts/improved_boost_rigorous --tta
+model: ImprovedCNN
+batch_norm: true
+dropout: true
+dropout_p: 0.3
+train_augment: true
+color_jitter: true
+cutout: true
+cutout_p: 0.5
+epochs: 40
+lr: 0.0008
+optimizer: adamw
+weight_decay: 0.0001
+label_smoothing: 0.05
+batch_size: 64
+seed: 42
+device: cpu
+log_every_n_batches: 100
+artifact_dir: artifacts/improved_boost
+early_stop_patience: 8
+early_stop_min_delta: 0.0001
+scheduler: cosine
+scheduler_t_max: 40
+scheduler_eta_min: 0.00001
+identity: training
+run_id: improved-boost-v1
+deterministic: true
+data_root: ./data
+split_manifest: data/splits/split_manifest.json
+export_state_dict: model_best.pth
+# Warm-start weights only (fresh AdamW + cosine); do not full-resume StepLR state.
+init_weights: artifacts/improved_full/checkpoint_best.pt
+smoke_max_batches: null
+resume_from: null
