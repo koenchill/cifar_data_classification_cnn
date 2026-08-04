@@ -70,6 +70,10 @@ def load_state_dict(
     if not isinstance(state, dict):
         raise TypeError("Expected a state_dict mapping; refusing non-dict artifact")
 
+    # Accept full training checkpoints ({model_state_dict: ...}) or bare state_dicts.
+    if "model_state_dict" in state and isinstance(state["model_state_dict"], dict):
+        state = state["model_state_dict"]
+
     model.load_state_dict(state)
     return model
 
