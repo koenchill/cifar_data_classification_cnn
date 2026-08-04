@@ -92,6 +92,7 @@ def controlled_train_loop(
         weight_decay=config.weight_decay,
         momentum=config.momentum,
     )
+    scheduler: StepLR | CosineAnnealingLR | None
     if config.scheduler == "step":
         scheduler = StepLR(
             optimizer,

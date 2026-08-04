@@ -75,7 +75,7 @@ def train_step(
     model: nn.Module,
     batch: tuple[Tensor, Tensor],
     criterion: nn.Module,
-    optimizer: Adam,
+    optimizer: Optimizer,
     device: torch.device,
 ) -> float:
     """One guide-ordered optimizer step; returns loss.item()."""
