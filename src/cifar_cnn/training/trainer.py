@@ -13,7 +13,7 @@ from typing import Any
 import torch
 import torch.nn as nn
 from torch import Tensor
-from torch.optim import Adam, Optimizer, SGD
+from torch.optim import SGD, Adam, Optimizer
 from torch.utils.data import DataLoader
 
 from cifar_cnn.models.simple_cnn import SimpleCNN, save_state_dict

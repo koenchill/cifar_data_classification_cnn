@@ -16,7 +16,9 @@ from cifar_cnn.data.constants import (
 NormalizeMode = Literal["guide", "imagenet"]
 
 
-def _mean_std(normalize: NormalizeMode) -> tuple[tuple[float, float, float], tuple[float, float, float]]:
+def _mean_std(
+    normalize: NormalizeMode,
+) -> tuple[tuple[float, float, float], tuple[float, float, float]]:
     if normalize == "imagenet":
         return IMAGENET_MEAN, IMAGENET_STD
     return NORMALIZE_MEAN, NORMALIZE_STD

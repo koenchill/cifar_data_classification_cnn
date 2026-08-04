@@ -35,11 +35,12 @@ def main() -> Path:
 
     transfer_summary_path = Path("artifacts/transfer_rigorous/summary.json")
     transfer_tta_path = Path("artifacts/transfer_rigorous_tta/summary.json")
-    transfer = (
-        _load_summary(str(transfer_tta_path))
-        if transfer_tta_path.is_file()
-        else (_load_summary(str(transfer_summary_path)) if transfer_summary_path.is_file() else None)
-    )
+    if transfer_tta_path.is_file():
+        transfer = _load_summary(str(transfer_tta_path))
+    elif transfer_summary_path.is_file():
+        transfer = _load_summary(str(transfer_summary_path))
+    else:
+        transfer = None
 
     doc = Document()
     for section in doc.sections:
