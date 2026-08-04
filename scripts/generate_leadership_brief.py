@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 from datetime import date
 from pathlib import Path
 
@@ -11,9 +12,34 @@ from docx.oxml.ns import qn
 from docx.shared import Inches, Pt, RGBColor
 
 
+def _load_summary(path: str) -> dict:
+    return json.loads(Path(path).read_text(encoding="utf-8"))
+
+
+def _fmt_pct(x: float) -> str:
+    return f"{100.0 * x:.1f}%"
+
+
+def _fmt3(x: float) -> str:
+    return f"{x:.3f}"
+
+
 def main() -> Path:
-    out = Path("docs/evidence/leadership_brief_cifar_cnn_revB.docx")
+    out = Path("docs/evidence/leadership_brief_cifar_cnn_revD.docx")
     out.parent.mkdir(parents=True, exist_ok=True)
+
+    baseline = _load_summary("artifacts/baseline_rigorous/summary.json")
+    improved = _load_summary("artifacts/improved_full_rigorous_latest/summary.json")
+    boost = _load_summary("artifacts/improved_boost_rigorous/summary.json")
+    boost_tta = _load_summary("artifacts/improved_boost_rigorous_tta/summary.json")
+
+    transfer_summary_path = Path("artifacts/transfer_rigorous/summary.json")
+    transfer_tta_path = Path("artifacts/transfer_rigorous_tta/summary.json")
+    transfer = (
+        _load_summary(str(transfer_tta_path))
+        if transfer_tta_path.is_file()
+        else (_load_summary(str(transfer_summary_path)) if transfer_summary_path.is_file() else None)
+    )
 
     doc = Document()
     for section in doc.sections:
@@ -45,7 +71,7 @@ def main() -> Path:
     meta = doc.add_paragraph()
     meta.alignment = WD_ALIGN_PARAGRAPH.CENTER
     m = meta.add_run(
-        f"Status Update  |  {date.today().isoformat()}  |  Classification: Internal  |  Rev. B"
+        f"Status Update  |  {date.today().isoformat()}  |  Classification: Internal  |  Rev. D"
     )
     m.font.size = Pt(10)
     m.italic = True
@@ -71,6 +97,23 @@ def main() -> Path:
         p = doc.add_paragraph(text, style="List Bullet")
         p.paragraph_format.space_after = Pt(3)
 
+    def fill_header(table, headers: list[str]) -> None:
+        for i, h in enumerate(headers):
+            cell = table.rows[0].cells[i]
+            cell.text = h
+            for paragraph in cell.paragraphs:
+                for cell_run in paragraph.runs:
+                    cell_run.bold = True
+                    cell_run.font.size = Pt(9)
+
+    def fill_row(table, r_idx: int, values: list[str]) -> None:
+        for c_idx, val in enumerate(values):
+            cell = table.rows[r_idx].cells[c_idx]
+            cell.text = val
+            for paragraph in cell.paragraphs:
+                for cell_run in paragraph.runs:
+                    cell_run.font.size = Pt(9)
+
     add_heading_custom("1. Purpose of Project")
     add_body(
         "This initiative delivers an end-to-end, governed reference platform for "
@@ -87,184 +130,217 @@ def main() -> Path:
 
     add_heading_custom("2. Under the Hood — Foundational CNN Concepts")
     add_body(
-        "A convolutional neural network (CNN) learns hierarchical visual features "
-        "directly from pixels. The following mechanisms are central to the current "
-        "training stack:"
+        "Current delivery uses two complementary stacks after the Colab GPU switch:"
     )
     add_bullet(
-        "Representation: each image is converted to a normalized tensor suitable "
-        "for gradient-based learning."
+        "CPU champion (ImprovedCNN): BatchNorm/Dropout; train-only crop/flip/color "
+        "jitter/Cutout; AdamW + weight decay; label smoothing; cosine LR; optional "
+        "horizontal-flip TTA at evaluation."
     )
     add_bullet(
-        "Convolution and pooling: learned filters detect local patterns (edges, "
-        "textures, parts); pooling reduces spatial resolution and improves "
-        "translation tolerance."
+        "GPU transfer path (ResNet18CIFAR): ImageNet-pretrained residual backbone "
+        "adapted for 32×32; two-stage fine-tune via scripts/train_transfer_live.py "
+        "--device cuda on Google Colab (NVIDIA), because the primary workstation "
+        "has AMD Radeon 780M graphics and cannot run CUDA."
     )
     add_bullet(
-        "Nonlinearity (ReLU): enables composition of complex, non-linear decision "
-        "boundaries across layers."
-    )
-    add_bullet(
-        "Classification head: spatial features are flattened and mapped to ten "
-        "class logits (airplane, automobile, bird, cat, deer, dog, frog, horse, "
-        "ship, truck)."
-    )
-    add_bullet(
-        "Optimization (current best CPU recipe): ImprovedCNN with BatchNorm and "
-        "Dropout; train-only augmentation (crop, flip, color jitter, Cutout/"
-        "RandomErasing); AdamW with weight decay; label smoothing; cosine "
-        "learning-rate annealing; early stopping on a locked 45K/5K validation "
-        "split drawn only from the training pool."
-    )
-    add_bullet(
-        "Evaluation discipline: the official 10K test set is reserved for final "
-        "reporting (accuracy, precision, recall, F1, confusion, one-vs-rest "
-        "ROC-AUC). Optional horizontal-flip test-time augmentation (TTA) averages "
-        "softmax probabilities at inference without retraining."
+        "Evaluation discipline: tune on locked 45K/5K train/val from the training "
+        "pool only; report once on the official 10K test set."
     )
 
     add_heading_custom(
-        "3. Metrics (Official Locked Test Set — 10,000 Images)"
+        "3. Latest Locked-Test Metrics (Official 10,000 Images)"
     )
     add_body(
-        "Results below are computed on the official CIFAR-10 test split. Macro "
-        "metrics average per-class precision, recall, and F1. Macro ROC-AUC "
-        "summarizes one-vs-rest ranking quality. Figures reflect the latest "
-        "rigorous evaluation artifacts."
+        "Source artifacts on workstation as of this revision. Aggregate metrics "
+        "are from rigorous evaluation JSON summaries."
     )
 
-    table = doc.add_table(rows=5, cols=6)
+    rows = [
+        [
+            "Baseline SimpleCNN",
+            _fmt_pct(baseline["accuracy"]),
+            _fmt3(baseline["macro_precision"]),
+            _fmt3(baseline["macro_recall"]),
+            _fmt3(baseline["macro_f1"]),
+            _fmt3(baseline["roc_auc_macro"]),
+        ],
+        [
+            "ImprovedCNN + basic aug",
+            _fmt_pct(improved["accuracy"]),
+            _fmt3(improved["macro_precision"]),
+            _fmt3(improved["macro_recall"]),
+            _fmt3(improved["macro_f1"]),
+            _fmt3(improved["roc_auc_macro"]),
+        ],
+        [
+            "ImprovedCNN boost",
+            _fmt_pct(boost["accuracy"]),
+            _fmt3(boost["macro_precision"]),
+            _fmt3(boost["macro_recall"]),
+            _fmt3(boost["macro_f1"]),
+            _fmt3(boost["roc_auc_macro"]),
+        ],
+        [
+            "ImprovedCNN boost + TTA (CPU champion)",
+            _fmt_pct(boost_tta["accuracy"]),
+            _fmt3(boost_tta["macro_precision"]),
+            _fmt3(boost_tta["macro_recall"]),
+            _fmt3(boost_tta["macro_f1"]),
+            _fmt3(boost_tta["roc_auc_macro"]),
+        ],
+    ]
+    if transfer is not None:
+        label = "ResNet18CIFAR transfer"
+        if transfer.get("tta_flip"):
+            label += " + TTA"
+        rows.append(
+            [
+                label,
+                _fmt_pct(transfer["accuracy"]),
+                _fmt3(transfer["macro_precision"]),
+                _fmt3(transfer["macro_recall"]),
+                _fmt3(transfer["macro_f1"]),
+                _fmt3(transfer["roc_auc_macro"]),
+            ]
+        )
+    else:
+        rows.append(
+            [
+                "ResNet18CIFAR Colab GPU transfer",
+                "Pending",
+                "—",
+                "—",
+                "—",
+                "—",
+            ]
+        )
+
+    table = doc.add_table(rows=1 + len(rows), cols=6)
     table.style = "Table Grid"
-    headers = [
-        "Model / Recipe",
-        "Accuracy",
-        "Macro P",
-        "Macro R",
-        "Macro F1",
-        "ROC-AUC",
-    ]
-    data_rows = [
-        [
-            "Baseline SimpleCNN (10 epochs, no augmentation)",
-            "73.4%",
-            "0.740",
-            "0.734",
-            "0.736",
-            "0.963",
-        ],
-        [
-            "ImprovedCNN + basic augmentation (prior best)",
-            "78.5%",
-            "0.783",
-            "0.785",
-            "0.783",
-            "0.976",
-        ],
-        [
-            "ImprovedCNN boost (Cutout + cosine + AdamW/WD + label smooth)",
-            "80.8%",
-            "0.807",
-            "0.808",
-            "0.806",
-            "0.979",
-        ],
-        [
-            "ImprovedCNN boost + TTA (horizontal flip)",
-            "81.8%",
-            "0.817",
-            "0.818",
-            "0.817",
-            "0.981",
-        ],
-    ]
-    for i, h in enumerate(headers):
-        cell = table.rows[0].cells[i]
-        cell.text = h
-        for paragraph in cell.paragraphs:
-            for cell_run in paragraph.runs:
-                cell_run.bold = True
-                cell_run.font.size = Pt(9)
-    for r_idx, row in enumerate(data_rows, start=1):
-        for c_idx, val in enumerate(row):
-            cell = table.rows[r_idx].cells[c_idx]
-            cell.text = val
-            for paragraph in cell.paragraphs:
-                for cell_run in paragraph.runs:
-                    cell_run.font.size = Pt(9)
+    fill_header(
+        table,
+        ["Model / Recipe", "Accuracy", "Macro P", "Macro R", "Macro F1", "ROC-AUC"],
+    )
+    for i, row in enumerate(rows, start=1):
+        fill_row(table, i, row)
 
     doc.add_paragraph()
     add_body(
-        "Interpretation: the CPU boost stack improved locked-test accuracy from "
-        "73.4% (baseline) to 80.8%, and to 81.8% with TTA—an absolute gain of "
-        "approximately 8.4 percentage points. Macro precision, recall, F1, and "
-        "ROC-AUC moved in the same direction. Vehicle classes remain strongest; "
-        "cat and bird remain the primary residual error modes."
+        f"Current CPU champion (boost + TTA): accuracy {_fmt_pct(boost_tta['accuracy'])}, "
+        f"macro P/R/F1 {_fmt3(boost_tta['macro_precision'])} / "
+        f"{_fmt3(boost_tta['macro_recall'])} / {_fmt3(boost_tta['macro_f1'])}, "
+        f"macro ROC-AUC {_fmt3(boost_tta['roc_auc_macro'])}, "
+        f"ECE {_fmt3(boost_tta['ece'])}. Absolute gain vs baseline: "
+        f"+{100.0 * (boost_tta['accuracy'] - baseline['accuracy']):.1f} percentage points."
     )
 
-    add_heading_custom("4. Current Risks and Blockers")
-    add_bullet(
-        "Accuracy ceiling on CPU: ImprovedCNN is approaching practical limits for "
-        "this topology (~low-80s). Crossing ~90% still requires GPU-backed "
-        "ResNet18 (or similar) transfer learning."
-    )
-    add_bullet(
-        "Transfer learning paused: a CPU-only ResNet18 ImageNet transfer run was "
-        "halted due to excessive wall-clock time; the pipeline and configs remain "
-        "ready pending GPU capacity."
-    )
-    add_bullet(
-        "AI risk (AIR-01): CIFAR-10 scores must not be over-interpreted as "
-        "real-world vision performance."
-    )
-    add_bullet(
-        "Security residuals (CYB-07 / CYB-08): accepted SCA/CVE allowlist items "
-        "require tracked upgrades before any production posture claim."
-    )
-    add_bullet(
-        "Champion discipline: continue selecting on validation only; publish "
-        "official test metrics once per candidate to avoid leakage."
+    add_heading_custom("3a. Per-Class P / R / F1 — CPU Champion (Boost + TTA)")
+    pc = boost_tta["per_class"]
+    pctable = doc.add_table(rows=1 + len(pc), cols=4)
+    pctable.style = "Table Grid"
+    fill_header(pctable, ["Class", "Precision", "Recall", "F1"])
+    for i, (name, scores) in enumerate(pc.items(), start=1):
+        fill_row(
+            pctable,
+            i,
+            [
+                name,
+                _fmt3(scores["precision"]),
+                _fmt3(scores["recall"]),
+                _fmt3(scores["f1"]),
+            ],
+        )
+    doc.add_paragraph()
+    add_body(
+        "Strongest classes: automobile, ship, truck. Weakest residual errors: "
+        "cat (recall) and bird — primary targets for the ResNet transfer uplift."
     )
 
-    add_heading_custom("5. Next Steps")
+    add_heading_custom("4. Colab / GPU Switch Status")
     add_bullet(
-        "Treat artifacts/improved_boost/model_best.pth (with optional TTA at "
-        "serve/eval time) as the current CPU champion candidate for packaging."
+        "Local workstation: AMD Radeon 780M; CUDA not available. CPU PyTorch retained."
     )
     add_bullet(
-        "Decide compute path: provision GPU (local NVIDIA, Colab, or cloud GPU) "
-        "to execute the existing two-stage ResNet18 transfer workflow targeting "
-        "~90–94% test accuracy."
+        "GPU execution path: Google Colab + notebooks/colab_transfer_gpu.ipynb."
     )
     add_bullet(
-        "If GPU is approved, pair transfer with cosine/OneCycle scheduling and "
-        "stronger augmentation; report locked-test P/R/F1/ROC once after "
-        "validation-based selection."
+        "Code on GitHub: branch feature/live-rigorous-metrics-roc "
+        "(scripts/train_transfer_live.py, transfer_stage*_gpu.yaml, --device cuda)."
+    )
+    if transfer is None:
+        add_bullet(
+            "ResNet metrics: not yet available on the workstation. "
+            "artifacts/transfer_live/model_best.pth and "
+            "artifacts/transfer_rigorous/summary.json were not present at brief "
+            "generation. Colab must finish training and the .pth weights "
+            "(not the .ipynb) must be downloaded before Rev E can publish "
+            "transfer P/R/F1/ROC."
+        )
+    else:
+        add_bullet(
+            "ResNet transfer metrics included in Section 3 from local rigorous "
+            "evaluation artifacts."
+        )
+
+    add_heading_custom("5. Current Risks and Blockers")
+    add_bullet(
+        "GPU/Colab completion risk: ~90%+ target blocked until valid ResNet "
+        "weights are produced and evaluated."
     )
     add_bullet(
-        "Maintain governed serving/GitOps path for the selected bundle; keep "
-        "educational/non-production positioning explicit in external "
-        "communications."
+        "Artifact hygiene: prior downloads included notebook files named like "
+        "model_best; only a true .pth state dict is valid for ResNet eval."
+    )
+    add_bullet(
+        "AI risk (AIR-01): do not over-claim CIFAR scores as real-world vision performance."
+    )
+    add_bullet(
+        "Security residuals (CYB-07 / CYB-08): SCA allowlist items remain tracked."
+    )
+
+    add_heading_custom("6. Next Steps")
+    add_bullet(
+        "Colab: BRANCH=feature/live-rigorous-metrics-roc; run "
+        "train_transfer_live.py --device cuda; download model_best.pth."
+    )
+    add_bullet(
+        "Local: evaluate_rigorous.py --live --model ResNet18CIFAR "
+        "--normalize imagenet --tta; update brief to Rev E with transfer metrics."
+    )
+    add_bullet(
+        "Until then, ship/demo with ImprovedCNN boost + TTA (81.8%) as CPU champion."
     )
 
     add_heading_custom("Executive Summary")
-    add_body(
-        "Platform Releases A–E establish a governed train–evaluate–serve path. "
-        "Live model quality on the locked CIFAR-10 test set has advanced from "
-        "approximately 73% (guide baseline) to 80.8% with the ImprovedCNN boost "
-        "recipe, and to 81.8% with test-time augmentation. Material further gains "
-        "toward the high-90s require GPU-backed transfer learning; until then, "
-        "the boost checkpoint is the recommended CPU reference model."
-    )
+    if transfer is None:
+        add_body(
+            "Latest confirmed locked-test metrics remain the ImprovedCNN boost "
+            f"stack: {_fmt_pct(boost['accuracy'])} without TTA and "
+            f"{_fmt_pct(boost_tta['accuracy'])} with TTA (macro F1 "
+            f"{_fmt3(boost_tta['macro_f1'])}, ROC-AUC "
+            f"{_fmt3(boost_tta['roc_auc_macro'])}). The GPU strategy has switched "
+            "to Colab because local hardware cannot run CUDA; ResNet18 transfer "
+            "metrics will be published immediately after Colab weights are "
+            "verified on the locked test set."
+        )
+    else:
+        add_body(
+            "Latest locked-test results include ResNet18 transfer metrics in "
+            "Section 3. CPU boost + TTA remains "
+            f"{_fmt_pct(boost_tta['accuracy'])}; compare against the transfer "
+            "row for the new champion decision."
+        )
 
     footer = doc.add_paragraph()
     footer.paragraph_format.space_before = Pt(18)
     fr = footer.add_run(
         "Document owner: Model / Platform Engineering  ·  Distribution: Technical "
-        "Leadership  ·  Evidence: artifacts/baseline_rigorous, "
+        "Leadership  ·  Metrics sources: artifacts/baseline_rigorous, "
         "artifacts/improved_full_rigorous_latest, "
         "artifacts/improved_boost_rigorous, "
-        "artifacts/improved_boost_rigorous_tta  ·  Checkpoint: "
-        "artifacts/improved_boost/model_best.pth"
+        "artifacts/improved_boost_rigorous_tta  ·  "
+        "Branch: feature/live-rigorous-metrics-roc"
     )
     fr.font.size = Pt(9)
     fr.italic = True
